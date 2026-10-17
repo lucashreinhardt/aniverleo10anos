@@ -188,6 +188,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
   <symbol id="i-pin" viewBox="-5 -5 10 10"><path fill-rule="evenodd" d="M0 4C-2.4.7-3-.3-3-1.4a3 3 0 0 1 6 0C3-.3 2.4.7 0 4ZM0-.2a1.3 1.3 0 1 0 0-2.6a1.3 1.3 0 0 0 0 2.6Z"/></symbol>
   <symbol id="i-warn" viewBox="-5 -5 10 10"><path d="M0-3.8L4 3.2H-4Z"/><path d="M0-1.4V1.2M0 2.1V2.2" stroke="#fff" stroke-width=".8" stroke-linecap="round"/></symbol>
   <symbol id="i-icecream" viewBox="-5 -5 10 10"><path d="M-2.1 .5H2.1L0 4.6Z"/><path d="M-2.6.1a2.6 2.6 0 0 1-.4-3.6A2.8 2.8 0 0 1 0-4.4a2.8 2.8 0 0 1 3 .9A2.6 2.6 0 0 1 2.6.1Z"/></symbol>
+  <symbol id="i-tub" viewBox="-5 -5 10 10"><path d="M-4.2-.3H4.2V1.1a2.6 2.6 0 0 1-2.6 2.6H-1.6A2.6 2.6 0 0 1-4.2 1.1Z"/><rect x="-4.7" y="-1.4" width="9.4" height="1" rx=".5"/><path d="M-3.3-1.4V-3.3a1.2 1.2 0 0 1 1.2-1.2h1.2" fill="none" stroke="currentColor" stroke-width=".7" stroke-linecap="round"/><rect x="-3.4" y="3.6" width="1.1" height="1" rx=".3"/><rect x="2.3" y="3.6" width="1.1" height="1" rx=".3"/></symbol>
   <symbol id="i-lock" viewBox="-5 -5 10 10"><rect x="-3" y="-.6" width="6" height="4.4" rx=".8"/><path d="M-1.8-.6V-1.8a1.8 1.8 0 0 1 3.6 0V-.6" fill="none" stroke="currentColor" stroke-width=".8"/></symbol>
 </svg>
 
@@ -228,6 +229,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
 <div id="zoom" class="modal" hidden></div>
 <div id="adult" class="modal" hidden></div>
 <div id="editor" class="modal" hidden></div>
+<div id="mover" class="modal" hidden></div>
 <div id="fx"></div>
 
 <script>
@@ -252,7 +254,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
       pista: ["Tenho tronco bem grosso e clarinho,", "dou sombra para o passarinho.", "Não ando, não corro, só fico no lugar:", "procurem a árvore e venham me abraçar!"],
       dica: "Procurem entre as árvores perto do campinho. O tronco dela é o mais grosso e o mais claro.",
       desafio: "Deem as mãos em volta da árvore e contem até 10, juntos!",
-      esconder: "Papel com o número 10 no pé da árvore de tronco grosso e claro."
+      esconder: "Papel com o número 10 preso no tronco da árvore mais grossa e clara, na altura das crianças."
     },
     traves: {
       nome: "TRAVES AMARELAS", icon: "goal", px: [640, 290], codigo: "9",
@@ -266,7 +268,14 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
       pista: ["Armação de madeira, folhas a subir,", "e um pneu pendurado pra você descobrir!", "Uma planta espinhosa segura o pneu:", "perto da parreira, o segredo é seu!"],
       dica: "Procurem uma armação de madeira com folhas. Perto dela tem uma planta espinhosa com um pneu.",
       desafio: "Charada: o que é, o que é? Tem coroa, mas não é rei. Tem escamas, mas não é peixe. (Resposta: abacaxi)",
-      esconder: "Papel com o número 7 pendurado no pé de pitaya ou na parreira."
+      esconder: "Papel com o número 7 preso na armação de madeira da parreira, na altura das crianças. Evitar a planta espinhosa."
+    },
+    banheira: {
+      nome: "BANHEIRA", icon: "tub", px: [372, 468], codigo: "8",
+      pista: ["Banheira de ferro, velhinha e pesada,", "ninguém toma banho nela, já foi aposentada!", "Fica pertinho da água, mas bem de lado:", "procurem a banheira, sem chegar no molhado!"],
+      dica: "É uma banheira velha, de ferro, perto da lagoa. Fiquem longe da beira da água!",
+      desafio: "Sem entrar na banheira, façam de conta que estão remando: 1, 2, 3, remar! Contem até 10 juntos.",
+      esconder: "Papel com o número 8 preso por fora da banheira de ferro, no lado oposto à água e longe da beira."
     },
     lagoa: {
       nome: "LAGOA", icon: "fish", px: [410, 255], codigo: "11",
@@ -286,8 +295,8 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
   };
 
   var GROUPS = {
-    grena: { nome: "CR7", rot: "Grupo CR7", cor: GARNET, ordem: ["arvore", "traves", "parreira", "lagoa"] },
-    azul:  { nome: "NEYMAR", rot: "Grupo Neymar", cor: BLUE, ordem: ["parreira", "lagoa", "arvore", "traves"] }
+    grena: { nome: "CR7", rot: "Grupo CR7", cor: GARNET, ordem: ["arvore", "traves", "parreira", "banheira", "lagoa"] },
+    azul:  { nome: "NEYMAR", rot: "Grupo Neymar", cor: BLUE, ordem: ["parreira", "banheira", "lagoa", "arvore", "traves"] }
   };
 
   /* Cronograma padrão. No modo adulto dá para criar, alterar e excluir horários sem mexer aqui.
@@ -302,9 +311,9 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     { id: "c6", ini: "16:30", fim: "18:00", t: "Brincadeiras", d: "", i: "star" },
     { id: "c7", ini: "18:00", fim: "", t: "Fim da festa", d: "Obrigado por vir!", i: "flag" }
   ];
-  var ICONS = ["ball", "star", "cup", "icecream", "cake", "gift", "flag", "map", "fish", "bulb", "speaker", "tree", "goal", "grapes", "pin"];
+  var ICONS = ["ball", "star", "cup", "icecream", "cake", "gift", "flag", "map", "fish", "bulb", "speaker", "tree", "goal", "grapes", "tub", "pin"];
   var HORA = /^([01]\d|2[0-3]):[0-5]\d$/;
-  var ICON_PT = { ball: "Bola", star: "Estrela", cup: "Copo", icecream: "Sorvete", cake: "Bolo", gift: "Presente", flag: "Bandeira", map: "Mapa", fish: "Peixe", bulb: "Lâmpada", speaker: "Som", tree: "Árvore", goal: "Gol", grapes: "Uva", pin: "Local" };
+  var ICON_PT = { ball: "Bola", star: "Estrela", cup: "Copo", icecream: "Sorvete", cake: "Bolo", gift: "Presente", flag: "Bandeira", map: "Mapa", fish: "Peixe", bulb: "Lâmpada", speaker: "Som", tree: "Árvore", goal: "Gol", grapes: "Uva", tub: "Banheira", pin: "Local" };
   /* ================================================================== */
 
   var KEY = "leo-tesouro-2026-v1";
@@ -314,7 +323,26 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
   var E = { edit: false, form: null, conf: null, msg: "", link: "", note: "" };   // edição do cronograma (só em memória)
   var CKEY = "leo-cronograma-v1";
   var CRONO = loadCrono();
+  var MV = { open: false, key: null };                 // tela de ajuste dos pontos no mapa
+  var PKEY = "leo-pontos-v1";
+  var ORIG = {};                                        // posições originais dos pontos (px na foto)
+  Object.keys(PLACES).forEach(function (k) { ORIG[k] = PLACES[k].px.slice(); });
+  var PONTOS = loadPontos();                            // ajustes feitos no modo adulto: { chave: [x, y] }
+  applyPontos();
   var mem = null;
+
+  function validPontos(o) {
+    var out = {};
+    if (!o || typeof o !== "object") return out;
+    Object.keys(o).forEach(function (k) {
+      var p = o[k];
+      if (Object.prototype.hasOwnProperty.call(PLACES, k) && Array.isArray(p) && p.length === 2 && isFinite(p[0]) && isFinite(p[1]) && p[0] >= 0 && p[0] <= 1459 && p[1] >= 0 && p[1] <= 675) out[k] = [Math.round(p[0]), Math.round(p[1])];
+    });
+    return out;
+  }
+  function loadPontos() { try { var j = JSON.parse(localStorage.getItem(PKEY)); if (j && j.v === 1) return validPontos(j.px); } catch (e) { } return {}; }
+  function savePontos() { try { localStorage.setItem(PKEY, JSON.stringify({ v: 1, px: PONTOS })); } catch (e) { } }
+  function applyPontos() { Object.keys(PLACES).forEach(function (k) { PLACES[k].px = (PONTOS[k] || ORIG[k]).slice(); }); }
 
   function load() {
     try { var j = JSON.parse(localStorage.getItem(KEY)); if (j && j.v === 1) return j; } catch (e) { }
@@ -355,10 +383,24 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     if (isVictory() || S.reveal) n = ord.length;
     return ord.slice(0, Math.min(n, ord.length));
   }
-  var LBL_DY = { arvore: 88, traves: -62, parreira: 88, lagoa: -62 };
-  function mapSVG() {
-    var shown = shownList(), s = "";
-    var xShown = !!(S.team && (isVictory() || (isFinalStep() && (S.hint >= 2 || S.reveal))));
+  var LBL_DY = { arvore: 88, traves: -62, parreira: 88, banheira: 88, lagoa: -62 };
+  // o nome fica embaixo ou em cima do ícone, o que bater menos nos outros ícones (os pontos podem ser movidos no modo adulto)
+  function labelDY(k) {
+    var p = PLACES[k], w = p.nome.length * 23 + 16, opts = [LBL_DY[k], LBL_DY[k] > 0 ? -62 : 88], best = opts[0], bestN = 1e9;
+    var outros = Object.keys(PLACES).filter(function (o) { return o !== k; }).map(function (o) { return PLACES[o].px; }).concat([QUIOSQUE.px]);
+    opts.forEach(function (dy) {
+      var cx = p.px[0], cy = p.px[1] + dy - 11, n = 0;
+      outros.forEach(function (q) {
+        var ddx = Math.max(Math.abs(q[0] - cx) - w / 2, 0), ddy = Math.max(Math.abs(q[1] - cy) - 20, 0);
+        if (ddx * ddx + ddy * ddy < 52 * 52) n++;
+      });
+      if (n < bestN) { bestN = n; best = dy; }
+    });
+    return best;
+  }
+  function mapSVG(mv) {
+    var shown = mv ? Object.keys(PLACES) : shownList(), s = "";
+    var xShown = !mv && !!(S.team && (isVictory() || (isFinalStep() && (S.hint >= 2 || S.reveal))));
     s += '<polygon points="' + ZONA_PTS + '" fill="#A20D3B" fill-opacity=".16" stroke="#fff" stroke-width="9" stroke-linejoin="round"/>';
     s += '<polygon points="' + ZONA_PTS + '" fill="none" stroke="#A20D3B" stroke-width="5.5" stroke-dasharray="22 14" stroke-linejoin="round"/>';
     s += '<text x="185" y="322" text-anchor="middle" font-size="62" fill="#fff" style="font-family:var(--f-display);letter-spacing:.04em" stroke="#1B2641" stroke-width="10" paint-order="stroke">LAGOA</text>';
@@ -367,7 +409,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     // bússola
     s += '<g transform="translate(75 598)"><circle r="52" fill="#fff" fill-opacity=".82"/><circle r="40" fill="none" stroke="' + NAVY + '" stroke-width="3"/><path d="M0-38L10 0L0 38L-10 0Z" fill="' + GARNET + '"/><path d="M-38 0L0-10L38 0L0 10Z" fill="' + GOLD + '" stroke="' + NAVY + '" stroke-width="2"/><text class="mlbl" y="-60" text-anchor="middle" font-size="30">N</text></g>';
     // caminho já feito
-    if (S.team && shown.length) {
+    if (!mv && S.team && shown.length) {
       var pts = [QUIOSQUE.px].concat(shown.map(function (k) { return PLACES[k].px; }));
       if (isVictory()) pts.push(FINAL.px);
       var d = pts.map(function (p) { return p[0] + "," + p[1]; }).join(" ");
@@ -384,13 +426,17 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     Object.keys(PLACES).forEach(function (k) {
       var p = PLACES[k], x = p.px[0], y = p.px[1];
       if (shown.indexOf(k) >= 0) {
-        s += '<g transform="translate(' + x + ' ' + y + ')"><circle r="46" fill="#fff"/><circle r="40" fill="' + GOLD + '" stroke="' + NAVY + '" stroke-width="6"/><use href="#i-' + p.icon + '" x="-30" y="-30" width="60" height="60" fill="' + NAVY + '" style="color:' + NAVY + '"/></g>' + lbl(x, y + LBL_DY[k], p.nome, 32);
+        s += '<g transform="translate(' + x + ' ' + y + ')"><circle r="46" fill="#fff"/><circle r="40" fill="' + GOLD + '" stroke="' + NAVY + '" stroke-width="6"/><use href="#i-' + p.icon + '" x="-30" y="-30" width="60" height="60" fill="' + NAVY + '" style="color:' + NAVY + '"/></g>' + lbl(x, y + labelDY(k), p.nome, 32);
       } else {
         s += '<g transform="translate(' + x + ' ' + y + ')"><circle r="46" fill="#fff" fill-opacity=".9"/><circle r="40" fill="' + NAVY3 + '" stroke="' + GOLD + '" stroke-width="6" stroke-dasharray="16 9"/><text y="20" text-anchor="middle" font-size="56" fill="' + GOLD + '" style="font-family:var(--f-display)">?</text></g>';
       }
+      if (mv) {
+        s += '<g transform="translate(' + (x + 38) + ' ' + (y - 38) + ')"><circle r="21" fill="' + GARNET + '" stroke="#fff" stroke-width="4"/><text y="9" text-anchor="middle" font-size="26" fill="#fff" style="font-family:var(--f-body);font-weight:700">' + (Object.keys(PLACES).indexOf(k) + 1) + '</text></g>';
+        if (MV.key === k) s += '<circle class="ring" cx="' + x + '" cy="' + y + '" r="74" fill="none" stroke="' + GOLD + '" stroke-width="10"/><circle class="ring" cx="' + x + '" cy="' + y + '" r="74" fill="none" stroke="' + NAVY + '" stroke-width="3"/>';
+      }
     });
     // alvo (dica no mapa)
-    if (S.team && !isVictory() && (S.hint >= 2 || S.reveal) && !(S.arrived && !isFinalStep())) {
+    if (!mv && S.team && !isVictory() && (S.hint >= 2 || S.reveal) && !(S.arrived && !isFinalStep())) {
       var t = curPlace();
       if (isFinalStep()) {
         s += xMark(t.px);
@@ -398,14 +444,14 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
         s += '<circle class="ring" cx="' + t.px[0] + '" cy="' + t.px[1] + '" r="74" fill="none" stroke="' + GOLD + '" stroke-width="10"/><circle class="ring" cx="' + t.px[0] + '" cy="' + t.px[1] + '" r="74" fill="none" stroke="' + NAVY + '" stroke-width="3"/>';
       }
     }
-    if (isVictory()) s += xMark(FINAL.px);
+    if (!mv && isVictory()) s += xMark(FINAL.px);
     return s;
   }
   function xMark(p) {
     return '<g transform="translate(' + p[0] + ' ' + (p[1] - 6) + ')"><circle class="ring" r="80" fill="none" stroke="' + GOLD + '" stroke-width="10"/><path d="M-36-36L36 36M36-36L-36 36" stroke="#fff" stroke-width="30" stroke-linecap="round"/><path d="M-36-36L36 36M36-36L-36 36" stroke="' + GARNET + '" stroke-width="17" stroke-linecap="round"/></g>' + pill(p[0], p[1] - 112, "TESOURO AQUI!", GARNET, 24);
   }
-  function mapHTML(zoom) {
-    return '<div class="map"><img src="' + IMG + '" alt="Foto aérea do sítio com a lagoa, o campinho e o quiosque" width="1459" height="675"><svg viewBox="0 0 1459 675" role="img" aria-label="Mapa do tesouro">' + mapSVG() + '</svg></div>' + (zoom ? '' : '<button class="zoombtn" data-act="zoom">Ampliar mapa</button>');
+  function mapHTML(zoom, mv) {
+    return '<div class="map"' + (mv ? ' data-act="mappick" style="cursor:crosshair"' : '') + '><img src="' + IMG + '" alt="Foto aérea do sítio com a lagoa, o campinho e o quiosque" width="1459" height="675"><svg viewBox="0 0 1459 675" role="img" aria-label="Mapa do tesouro">' + mapSVG(mv) + '</svg></div>' + (zoom ? '' : '<button class="zoombtn" data-act="zoom">Ampliar mapa</button>');
   }
 
   /* ---------------- painel ---------------- */
@@ -430,7 +476,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
       '<button class="team azul" data-act="team" data-v="azul"><b>GRUPO ' + GROUPS.azul.nome + '</b><span>Toquem aqui e digitem o código</span></button></div>' +
       '<div class="card"><p class="eyebrow">Como jogar</p><ul class="rules">' +
       '<li>' + ic("speaker") + 'Leiam a pista, ou toquem em OUVIR para escutar.</li>' +
-      '<li>' + ic("pin") + 'Achem o lugar no mapa e procurem o papel com o número da camisa.</li>' +
+      '<li>' + ic("pin") + 'Achem o lugar no mapa e procurem o papel com o número escondido.</li>' +
       '<li>' + ic("star") + 'Digitem o número para abrir a próxima pista. No fim, o tesouro!</li></ul></div>';
   }
   function gpinHTML() {
@@ -448,7 +494,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     if (S.hint >= 2) h += '<p class="note"><b>MAPA</b>' + (fin ? 'O X mostra onde o tesouro está.' : 'Olhem o círculo que pisca no mapa.') + '</p>';
     var needCode = !fin && USAR_CODIGOS && pl.codigo, finCode = fin && USAR_CODIGOS && pl.codigo;
     if (K.mode === "code" && (needCode || finCode)) {
-      h += '<div class="card dark"><p class="eyebrow">Achamos o lugar!</p><p style="margin:0 0 10px">Procurem o papel com o <b>número da camisa</b> e digitem aqui.</p>' + kpHTML(4) + '<p class="msg' + (K.bad ? " bad" : "") + '" id="msg">' + K.msg + '</p></div>';
+      h += '<div class="card dark"><p class="eyebrow">Achamos o lugar!</p><p style="margin:0 0 10px">Procurem o papel com o <b>número escondido</b> e digitem aqui.</p>' + kpHTML(4) + '<p class="msg' + (K.bad ? " bad" : "") + '" id="msg">' + K.msg + '</p></div>';
     } else if (fin) {
       h += '<button class="btn gold big" data-act="' + (finCode ? "chegamos" : "achou") + '">ACHAMOS O TESOURO!</button>';
     } else {
@@ -480,6 +526,16 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     $("panel").innerHTML = panelHTML();
     if (!$("zoom").hidden) $("zoom").innerHTML = zoomHTML();
     if (A.open) renderAdult();
+    if (MV.open) renderMover();
+  }
+  function renderMover() {
+    var el = $("mover"), sc = el.querySelector(".zoomscroll"), sl = sc ? sc.scrollLeft : 0, st = sc ? sc.scrollTop : 0, mt = el.scrollTop;
+    var h = '<div class="modal-in" style="max-width:none"><div class="top"><h2 style="font-size:26px">Pontos no mapa</h2><button class="btn gold" data-act="moverclose">Pronto</button></div>';
+    h += '<p class="lead" style="margin:0">' + (MV.key ? 'Toque no mapa onde fica de verdade: <b style="color:var(--gold)">' + PLACES[MV.key].nome + '</b>.' : 'Toque num nome para mover o ponto no mapa. Os números são os do guia do adulto.') + '</p><div class="row">';
+    Object.keys(PLACES).forEach(function (k, n) { h += '<button class="btn' + (MV.key === k ? " gold" : "") + '" data-act="mover" data-v="' + k + '">' + (n + 1) + ' · ' + PLACES[k].nome + (PONTOS[k] ? " ✓" : "") + '</button>'; });
+    h += '</div><div class="zoomscroll">' + mapHTML(true, true) + '</div></div>';
+    el.innerHTML = h; el.hidden = false;
+    var sc2 = el.querySelector(".zoomscroll"); sc2.scrollLeft = sl; sc2.scrollTop = st; el.scrollTop = mt;
   }
   function zoomHTML() {
     return '<div class="modal-in" style="max-width:none"><div class="top"><h2 style="font-size:28px">Mapa</h2><button class="btn gold" data-act="zoomclose">Fechar</button></div><div class="zoomscroll">' + mapHTML(true) + '</div></div>';
@@ -492,6 +548,11 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
       h += '<p class="lead">Digite o código dos adultos.</p>' + kpHTML(4) + '<p class="msg bad" id="msg">' + K.msg + '</p>';
     } else {
       h += '<div class="card dark"><p class="eyebrow">Cronograma</p><p class="lead" style="margin-bottom:12px">Criar, alterar ou excluir os horários da festa.</p><button class="btn gold" data-act="crono-edit">Editar cronograma</button></div>';
+      h += '<div class="card dark"><p class="eyebrow">Pontos no mapa</p><p class="lead" style="margin-bottom:12px">Os ícones das pistas estão em posições aproximadas. Escolha um ponto e toque no mapa onde ele realmente fica.</p><div class="row">' +
+        Object.keys(PLACES).map(function (k, n) { return '<button class="btn" data-act="mover" data-v="' + k + '">' + (n + 1) + ' · ' + PLACES[k].nome + (PONTOS[k] ? " ✓" : "") + '</button>'; }).join("") +
+        '</div><div class="row" style="margin-top:12px"><button class="btn" data-act="moverall">Ver mapa numerado</button><button class="btn' + (E.conf === "pontos" ? " warn" : "") + '" data-act="moverreset">' + (E.conf === "pontos" ? "Toque de novo para confirmar" : "Voltar às posições originais") + '</button></div></div>';
+      h += '<div class="card dark"><p class="eyebrow">Levar para os outros aparelhos</p><p class="lead" style="margin-bottom:12px">Gera um link com o cronograma e as posições dos pontos. Abra o link no outro tablet.</p><button class="btn" data-act="eshare">Gerar link</button>' +
+        (E.link ? '<textarea class="linkbox" rows="3" readonly data-act="selbox" style="margin-top:12px">' + esc(E.link) + '</textarea><p class="msg" style="margin-top:8px">' + esc(E.msg) + '</p>' : '') + '</div>';
       h += '<div class="card dark"><p class="eyebrow">Este tablet</p><div class="row">' +
         '<button class="btn' + (S.team === "grena" ? " gold" : "") + '" data-act="setteam" data-v="grena">' + GROUPS.grena.rot + '</button>' +
         '<button class="btn' + (S.team === "azul" ? " gold" : "") + '" data-act="setteam" data-v="azul">' + GROUPS.azul.rot + '</button></div>';
@@ -502,8 +563,8 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
       }
       h += '<div class="row" style="margin-top:12px"><button class="btn' + (S.reveal ? " gold" : "") + '" data-act="reveal">' + (S.reveal ? "Esconder lugares" : "Mostrar todos os lugares") + '</button>' +
         '<button class="btn" data-act="reset">' + (A.confirm ? "Toque de novo para confirmar" : "Reiniciar este tablet") + '</button></div></div>';
-      h += '<div class="card dark"><p class="eyebrow">O que esconder em cada lugar</p><ul class="adult-list">';
-      Object.keys(PLACES).forEach(function (k) { h += '<li><b>' + PLACES[k].nome + '</b><br>' + PLACES[k].esconder + '</li>'; });
+      h += '<div class="card dark"><p class="eyebrow">O que esconder em cada lugar</p><p class="lead" style="margin-bottom:10px">Prenda cada papel na altura das crianças, na manhã da festa. Os números 1 a 5 são os do mapa numerado e do guia em PDF.</p><ul class="adult-list">';
+      Object.keys(PLACES).forEach(function (k, n) { h += '<li><b>' + (n + 1) + ' · ' + PLACES[k].nome + ' · papel ' + PLACES[k].codigo + '</b><br>' + PLACES[k].esconder + '</li>'; });
       h += '<li><b>TESOURO</b><br>' + FINAL.esconder + '</li></ul>' +
         '<p class="lead" style="margin-top:10px">Ordem do ' + GROUPS.grena.nome + ': ' + GROUPS.grena.ordem.map(function (k) { return PLACES[k].nome; }).join(" → ") + '.<br>Ordem do ' + GROUPS.azul.nome + ': ' + GROUPS.azul.ordem.map(function (k) { return PLACES[k].nome; }).join(" → ") + '.</p></div>';
     }
@@ -571,7 +632,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
         '<button class="btn" data-act="eshare">Link para outros aparelhos</button>' +
         '<button class="btn' + (E.conf === "padrao" ? " warn" : "") + '" data-act="epadrao">' + (E.conf === "padrao" ? "Toque de novo para confirmar" : "Voltar ao padrão") + '</button>' +
         '<button class="btn" data-act="edone">Concluir</button></div>';
-      if (E.link) h += '<p class="lead" style="margin:12px 0 6px">Abra este link nos outros aparelhos para copiar o cronograma:</p><textarea class="linkbox" id="linkbox" rows="3" readonly data-act="selbox">' + esc(E.link) + '</textarea>';
+      if (E.link) h += '<p class="lead" style="margin:12px 0 6px">Abra este link nos outros aparelhos para copiar o cronograma e os pontos do mapa:</p><textarea class="linkbox" id="linkbox" rows="3" readonly data-act="selbox">' + esc(E.link) + '</textarea>';
       if (E.msg) h += '<p class="msg" style="margin-top:8px">' + esc(E.msg) + '</p>';
       if (E.warn) h += '<p class="msg bad" style="margin-top:8px">' + esc(E.warn) + '</p>';
       h += '</div>';
@@ -626,9 +687,10 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
   }
   function shareLink() {
-    var url = location.href.split("#")[0] + "#c=" + b64url(JSON.stringify(CRONO));
-    E.link = url; E.msg = "Copie o link abaixo e abra nos outros aparelhos."; renderCrono();
-    try { navigator.clipboard.writeText(url).then(function () { E.msg = "Link copiado! Cole numa mensagem e abra nos outros aparelhos."; renderCrono(); }, function () { }); } catch (e) { }
+    var url = location.href.split("#")[0] + "#c=" + b64url(JSON.stringify({ c: CRONO, p: PONTOS }));
+    function refresh() { renderCrono(); if (A.open && A.ok) renderAdult(); }
+    E.link = url; E.msg = "Copie o link abaixo e abra nos outros aparelhos."; refresh();
+    try { navigator.clipboard.writeText(url).then(function () { E.msg = "Link copiado! Cole numa mensagem e abra nos outros aparelhos."; refresh(); }, function () { }); } catch (e) { }
   }
   function importHash() {
     var m = /^#c=([A-Za-z0-9_-]+)$/.exec(location.hash || ""); if (!m) return false;
@@ -636,9 +698,13 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
       var b = m[1].replace(/-/g, "+").replace(/_/g, "/"); while (b.length % 4) b += "=";
       var bin = atob(b), bytes = new Uint8Array(bin.length);
       for (var k = 0; k < bin.length; k++) bytes[k] = bin.charCodeAt(k);
-      var l = cleanList(JSON.parse(new TextDecoder().decode(bytes)));
-      if (!l) return false;
-      CRONO = l; persistCrono(); E.note = "Cronograma atualizado a partir do link."; return true;
+      var j = JSON.parse(new TextDecoder().decode(bytes)), ok = false;
+      var c = Array.isArray(j) ? j : (j && typeof j === "object" ? j.c : null);   // links antigos eram só a lista
+      var l = c ? cleanList(c) : null;
+      if (l) { CRONO = l; persistCrono(); ok = true; }
+      if (j && !Array.isArray(j) && typeof j === "object" && j.p && typeof j.p === "object") { PONTOS = validPontos(j.p); savePontos(); applyPontos(); ok = true; }
+      if (!ok) return false;
+      E.note = "Cronograma e pontos do mapa atualizados a partir do link."; return true;
     } catch (e) { return false; }
   }
 
@@ -698,8 +764,8 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
       S.hint = 0; save(); render();
     } else bad("Esse número não é o do papel. Procurem de novo!");
   }
-  function go(a, v) {
-    if (a !== "edel" && a !== "epadrao") E.conf = null;
+  function go(a, v, ev) {
+    if (a !== "edel" && a !== "epadrao" && a !== "moverreset") E.conf = null;
     switch (a) {
       case "tab": setTab(v); break;
       case "team": K.mode = "gpin"; K.pend = v; K.val = ""; K.msg = ""; K.bad = false; render(); break;
@@ -724,7 +790,20 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
         else E.conf = "padrao";
         renderCrono(); break;
       case "eshare": shareLink(); break;
-      case "selbox": var bx = $("linkbox"); if (bx) bx.select(); break;
+      case "selbox": if (ev && ev.target && ev.target.select) ev.target.select(); break;
+      case "mover": MV.open = true; MV.key = v; renderMover(); break;
+      case "moverall": MV.open = true; MV.key = null; renderMover(); break;
+      case "moverclose": MV.open = false; MV.key = null; $("mover").hidden = true; render(); break;
+      case "mappick":
+        if (!MV.key || !ev) break;
+        var mp = ev.target.closest(".map"); if (!mp) break;
+        var mr = mp.getBoundingClientRect();
+        PONTOS[MV.key] = [Math.max(0, Math.min(1459, Math.round((ev.clientX - mr.left) / mr.width * 1459))), Math.max(0, Math.min(675, Math.round((ev.clientY - mr.top) / mr.height * 675)))];
+        applyPontos(); savePontos(); E.link = ""; render(); break;
+      case "moverreset":
+        if (E.conf === "pontos") { PONTOS = {}; applyPontos(); savePontos(); E.conf = null; E.link = ""; render(); }
+        else { E.conf = "pontos"; renderAdult(); }
+        break;
       case "edone": E.edit = false; E.link = ""; E.msg = ""; E.warn = ""; E.conf = null; renderCrono(); break;
       case "speak": speak(); break;
       case "hint": S.hint = Math.max(S.hint, 1); save(); render(); break;
@@ -751,7 +830,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
   }
   document.addEventListener("click", function (e) {
     var b = e.target.closest("[data-act]"); if (!b) return;
-    go(b.getAttribute("data-act"), b.getAttribute("data-v"));
+    go(b.getAttribute("data-act"), b.getAttribute("data-v"), e);
   });
 
   render();
