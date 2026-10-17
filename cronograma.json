@@ -1,0 +1,64 @@
+{
+ "v": 1,
+ "items": [
+  {
+   "id": "c1",
+   "ini": "14:00",
+   "fim": "14:45",
+   "t": "Brincadeiras diversas",
+   "d": "Pula-pula, fla-flu, esconde-esconde e futebol.",
+   "i": "ball"
+  },
+  {
+   "id": "c2",
+   "ini": "14:45",
+   "fim": "15:15",
+   "t": "Buffet de salgados",
+   "d": "",
+   "i": "cup"
+  },
+  {
+   "id": "c3",
+   "ini": "15:15",
+   "fim": "15:30",
+   "t": "Parabéns",
+   "d": "Bolo e docinhos.",
+   "i": "cake"
+  },
+  {
+   "id": "c4",
+   "ini": "15:30",
+   "fim": "17:30",
+   "t": "Buffet de sorvete liberado",
+   "d": "Liberado até as 17:30.",
+   "i": "icecream",
+   "par": true
+  },
+  {
+   "id": "c5",
+   "ini": "16:00",
+   "fim": "16:30",
+   "t": "Caça ao tesouro",
+   "d": "Dois grupos, CR7 e Neymar, com um tablet cada. Sigam as pistas do mapa!",
+   "i": "map",
+   "destaque": true,
+   "mapa": true
+  },
+  {
+   "id": "c6",
+   "ini": "16:30",
+   "fim": "18:00",
+   "t": "Brincadeiras",
+   "d": "",
+   "i": "star"
+  },
+  {
+   "id": "c7",
+   "ini": "18:00",
+   "fim": "",
+   "t": "Fim da festa",
+   "d": "Obrigado por vir!",
+   "i": "flag"
+  }
+ ]
+}

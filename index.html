@@ -142,7 +142,9 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
 
 /* ---------- janelas ---------- */
 .modal{position:fixed;inset:0;z-index:40;background:#0E1630;overflow:auto;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
-.modal-in{max-width:760px;margin:0 auto;display:grid;gap:14px}
+.backrow{margin-bottom:14px}
+  .backrow{margin-bottom:14px}
+  .modal-in{max-width:760px;margin:0 auto;display:grid;gap:14px}
 .modal .top{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .zoomscroll{overflow:auto;border-radius:12px;border:3px solid var(--gold)}
 .zoomscroll .map{width:max(100%,1100px);max-width:none;border-radius:0}
@@ -213,6 +215,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
           <li><svg class="ic" aria-hidden="true"><use href="#i-flag"/></svg>Sempre juntos, com um adulto por perto.</li>
           <li><svg class="ic" aria-hidden="true"><use href="#i-fish"/></svg>Lagoa só de longe: ninguém passa da faixa vermelha.</li>
           <li><svg class="ic" aria-hidden="true"><use href="#i-warn"/></svg>A avenida é proibida: ninguém sai do sítio.</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-warn"/></svg>Piscina e jacuzzi: só andando, ninguém chega na borda da água.</li>
         </ul>
       </div>
     </div>
@@ -271,14 +274,14 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
       esconder: "Papel com o número 7 preso na armação de madeira da parreira, na altura das crianças. Evitar a planta espinhosa."
     },
     banheira: {
-      nome: "BANHEIRA", icon: "tub", px: [372, 468], codigo: "8",
+      nome: "BANHEIRA", icon: "tub", px: [441, 310], codigo: "8",
       pista: ["Banheira de ferro, velhinha e pesada,", "ninguém toma banho nela, já foi aposentada!", "Fica pertinho da água, mas bem de lado:", "procurem a banheira, sem chegar no molhado!"],
       dica: "É uma banheira velha, de ferro, perto da lagoa. Fiquem longe da beira da água!",
       desafio: "Sem entrar na banheira, façam de conta que estão remando: 1, 2, 3, remar! Contem até 10 juntos.",
       esconder: "Papel com o número 8 preso por fora da banheira de ferro, no lado oposto à água e longe da beira."
     },
     lagoa: {
-      nome: "LAGOA", icon: "fish", px: [410, 255], codigo: "11",
+      nome: "LAGOA", icon: "fish", px: [370, 180], codigo: "11",
       pista: ["Peixinho não joga bola, mas sabe nadar!", "Vão até a lagoa, sem se molhar:", "fiquem longe da beira, é o combinado!", "O papel espera num lugar afastado."],
       dica: "É o lugar dos peixes. Parem antes da faixa vermelha do mapa e esperem o adulto.",
       desafio: "Tirem a foto do grupo com a lagoa ao fundo, sem passar da faixa vermelha.",
@@ -286,13 +289,25 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     }
   };
 
-  /* Último passo: onde o tesouro está escondido. Trocar px e textos quando o local for definido. */
-  var FINAL = {
-    nome: "O TESOURO", px: [1127, 592], codigo: "",
-    pista: ["Última pista, a missão está no fim!", "Voltem correndo, é só seguir assim:", "no quiosque tem festa, bolo e canção,", "procurem o baú do tesouro, com emoção!"],
-    dica: "Voltem ao quiosque, onde a festa começou.",
-    esconder: "Baú do tesouro escondido no quiosque (local provisório)."
+  /* Último passo: um tesouro para cada grupo, os dois na área da jacuzzi, com pistas e dicas diferentes.
+     px = onde desenhar o X no mapa; null enquanto não for marcado (modo adulto: Pontos no mapa). */
+  var FINAIS = {
+    grena: {
+      key: "final_grena", nome: "TESOURO CR7", px: null, codigo: "",
+      pista: ["Última pista, o fim da jornada!", "Perto da piscina, sem molhar nada:", "vão até a jacuzzi, andando, sem correr,", "o baú do CR7 espera por vocês!"],
+      dica: "O baú do CR7 fica ao lado da jacuzzi, perto da piscina. Andem devagar, esperem o adulto e fiquem longe da borda da água.",
+      esconder: "Baú do CR7 no chão, ao lado da jacuzzi, longe da borda da água, com um adulto de plantão. Só abrir quando o tablet do Grupo CR7 mostrar a pista 6 de 6. (Local exato do baú: defina com o Lucas.)"
+    },
+    azul: {
+      key: "final_azul", nome: "TESOURO NEYMAR", px: null, codigo: "",
+      pista: ["Chegou a hora, último desafio!", "Onde a água borbulha, perto do azul:", "vão até a jacuzzi, com muita atenção,", "o baú do Neymar espera por vocês!"],
+      dica: "O baú do Neymar fica na jacuzzi, perto da piscina, em outro cantinho que o do CR7. Andem devagar, esperem o adulto e fiquem longe da borda da água.",
+      esconder: "Baú do Neymar no chão, na área da jacuzzi, em outro canto que o do CR7, longe da borda da água, com um adulto de plantão. Só abrir quando o tablet do Grupo Neymar mostrar a pista 6 de 6. (Local exato do baú: defina com o Lucas.)"
+    }
   };
+  function fin() { return FINAIS[S.team] || FINAIS.grena; }
+  function finKeys() { return ["final_grena", "final_azul"]; }
+  function finByKey(k) { return k === "final_grena" ? FINAIS.grena : k === "final_azul" ? FINAIS.azul : null; }
 
   var GROUPS = {
     grena: { nome: "CR7", rot: "Grupo CR7", cor: GARNET, ordem: ["arvore", "traves", "parreira", "banheira", "lagoa"] },
@@ -320,13 +335,14 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
   var S = load();
   var K = { mode: null, val: "", msg: "", bad: false, pend: null };
   var A = { open: false, ok: false, confirm: false };
-  var E = { edit: false, form: null, conf: null, msg: "", link: "", note: "" };   // edição do cronograma (só em memória)
+  var E = { dirty: false, edit: false, form: null, conf: null, msg: "", link: "", note: "" };   // edição do cronograma (só em memória)
   var CKEY = "leo-cronograma-v1";
   var CRONO = loadCrono();
   var MV = { open: false, key: null };                 // tela de ajuste dos pontos no mapa
   var PKEY = "leo-pontos-v1";
   var ORIG = {};                                        // posições originais dos pontos (px na foto)
   Object.keys(PLACES).forEach(function (k) { ORIG[k] = PLACES[k].px.slice(); });
+  ORIG.final_grena = [1013, 587]; ORIG.final_azul = [1013, 587];   // jacuzzi (marcada pelo Lucas na foto)
   var PONTOS = loadPontos();                            // ajustes feitos no modo adulto: { chave: [x, y] }
   applyPontos();
   var mem = null;
@@ -336,13 +352,18 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     if (!o || typeof o !== "object") return out;
     Object.keys(o).forEach(function (k) {
       var p = o[k];
-      if (Object.prototype.hasOwnProperty.call(PLACES, k) && Array.isArray(p) && p.length === 2 && isFinite(p[0]) && isFinite(p[1]) && p[0] >= 0 && p[0] <= 1459 && p[1] >= 0 && p[1] <= 675) out[k] = [Math.round(p[0]), Math.round(p[1])];
+      if ((k === "final_grena" || k === "final_azul" || Object.prototype.hasOwnProperty.call(PLACES, k)) && Array.isArray(p) && p.length === 2 && isFinite(p[0]) && isFinite(p[1]) && p[0] >= 0 && p[0] <= 1459 && p[1] >= 0 && p[1] <= 675) out[k] = [Math.round(p[0]), Math.round(p[1])];
     });
     return out;
   }
-  function loadPontos() { try { var j = JSON.parse(localStorage.getItem(PKEY)); if (j && j.v === 1) return validPontos(j.px); } catch (e) { } return {}; }
-  function savePontos() { try { localStorage.setItem(PKEY, JSON.stringify({ v: 1, px: PONTOS })); } catch (e) { } }
-  function applyPontos() { Object.keys(PLACES).forEach(function (k) { PLACES[k].px = (PONTOS[k] || ORIG[k]).slice(); }); }
+  function loadPontos() { return {}; }   // as posições vêm só do código, iguais em todos os aparelhos
+  function savePontos() { }
+  function applyPontos() {
+    Object.keys(PLACES).forEach(function (k) { PLACES[k].px = (PONTOS[k] || ORIG[k]).slice(); });
+    FINAIS.grena.px = (PONTOS.final_grena || ORIG.final_grena).slice(); FINAIS.azul.px = (PONTOS.final_azul || ORIG.final_azul).slice();
+  }
+  function chaves() { return Object.keys(PLACES).concat(finKeys()); }
+  function nomeDe(k) { return finByKey(k) ? finByKey(k).nome : PLACES[k].nome; }
 
   function load() {
     try { var j = JSON.parse(localStorage.getItem(KEY)); if (j && j.v === 1) return j; } catch (e) { }
@@ -353,7 +374,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
   function ic(n, c) { return '<svg class="ic ' + (c || "") + '" aria-hidden="true"><use href="#i-' + n + '"/></svg>'; }
   function team() { return GROUPS[S.team]; }
   function total() { return team().ordem.length + 1; }
-  function curPlace() { var g = team(); return S.step < g.ordem.length ? PLACES[g.ordem[S.step]] : FINAL; }
+  function curPlace() { var g = team(); return S.step < g.ordem.length ? PLACES[g.ordem[S.step]] : fin(); }
   function isFinalStep() { return S.team && S.step === team().ordem.length; }
   function isVictory() { return S.team && S.step >= total(); }
 
@@ -400,7 +421,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
   }
   function mapSVG(mv) {
     var shown = mv ? Object.keys(PLACES) : shownList(), s = "";
-    var xShown = !mv && !!(S.team && (isVictory() || (isFinalStep() && (S.hint >= 2 || S.reveal))));
+    var xShown = !mv && !!(S.team && fin().px && (isVictory() || (isFinalStep() && (S.hint >= 2 || S.reveal))));
     s += '<polygon points="' + ZONA_PTS + '" fill="#A20D3B" fill-opacity=".16" stroke="#fff" stroke-width="9" stroke-linejoin="round"/>';
     s += '<polygon points="' + ZONA_PTS + '" fill="none" stroke="#A20D3B" stroke-width="5.5" stroke-dasharray="22 14" stroke-linejoin="round"/>';
     s += '<text x="185" y="322" text-anchor="middle" font-size="62" fill="#fff" style="font-family:var(--f-display);letter-spacing:.04em" stroke="#1B2641" stroke-width="10" paint-order="stroke">LAGOA</text>';
@@ -411,7 +432,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     // caminho já feito
     if (!mv && S.team && shown.length) {
       var pts = [QUIOSQUE.px].concat(shown.map(function (k) { return PLACES[k].px; }));
-      if (isVictory()) pts.push(FINAL.px);
+      if (isVictory() && fin().px) pts.push(fin().px);
       var d = pts.map(function (p) { return p[0] + "," + p[1]; }).join(" ");
       s += '<polyline points="' + d + '" fill="none" stroke="#fff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1 30" opacity=".95"/>';
       s += '<polyline points="' + d + '" fill="none" stroke="' + team().cor + '" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1 30"/>';
@@ -420,7 +441,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     s += lbl(CASA.px[0], CASA.px[1] - 52, "CASA", 28);
     var q = QUIOSQUE.px;
     s += '<g transform="translate(' + q[0] + ' ' + q[1] + ')"><circle r="64" fill="#fff" fill-opacity=".3" stroke="' + GARNET + '" stroke-width="5" stroke-dasharray="12 9"/><circle r="46" fill="#fff"/><circle r="40" fill="' + GARNET + '" stroke="' + NAVY + '" stroke-width="6"/><g style="color:' + GOLD + '"><use href="#i-flag" x="-30" y="-30" width="60" height="60" fill="' + GOLD + '"/></g></g>';
-    s += lbl(q[0] - 176, q[1] + 10, "QUIOSQUE", 32);
+    s += lbl(q[0] + 150, q[1] + 10, "QUIOSQUE", 32);
     if (!xShown) s += pill(q[0], q[1] - 98, "PARTIDA", GARNET, 24);
     // lugares
     Object.keys(PLACES).forEach(function (k) {
@@ -435,16 +456,25 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
         if (MV.key === k) s += '<circle class="ring" cx="' + x + '" cy="' + y + '" r="74" fill="none" stroke="' + GOLD + '" stroke-width="10"/><circle class="ring" cx="' + x + '" cy="' + y + '" r="74" fill="none" stroke="' + NAVY + '" stroke-width="3"/>';
       }
     });
+    // tesouro na tela de ajuste dos pontos
+    if (mv) {
+      finKeys().forEach(function (k, n) {
+        var f = finByKey(k); if (!f.px) return;
+        s += xMark(f.px);
+        s += '<g transform="translate(' + (f.px[0] + 46) + ' ' + (f.px[1] - 52) + ')"><circle r="21" fill="' + (k === "final_grena" ? GARNET : "#1F5FB4") + '" stroke="#fff" stroke-width="4"/><text y="9" text-anchor="middle" font-size="26" fill="#fff" style="font-family:var(--f-body);font-weight:700">' + (Object.keys(PLACES).length + n + 1) + '</text></g>';
+        if (MV.key === k) s += '<circle class="ring" cx="' + f.px[0] + '" cy="' + f.px[1] + '" r="74" fill="none" stroke="' + GOLD + '" stroke-width="10"/>';
+      });
+    }
     // alvo (dica no mapa)
     if (!mv && S.team && !isVictory() && (S.hint >= 2 || S.reveal) && !(S.arrived && !isFinalStep())) {
       var t = curPlace();
       if (isFinalStep()) {
-        s += xMark(t.px);
+        if (t.px) s += xMark(t.px);
       } else {
         s += '<circle class="ring" cx="' + t.px[0] + '" cy="' + t.px[1] + '" r="74" fill="none" stroke="' + GOLD + '" stroke-width="10"/><circle class="ring" cx="' + t.px[0] + '" cy="' + t.px[1] + '" r="74" fill="none" stroke="' + NAVY + '" stroke-width="3"/>';
       }
     }
-    if (!mv && isVictory()) s += xMark(FINAL.px);
+    if (!mv && isVictory() && fin().px) s += xMark(fin().px);
     return s;
   }
   function xMark(p) {
@@ -491,7 +521,8 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     h += '<div class="acts">' + (window.speechSynthesis ? '<button class="btn" data-act="speak">' + ic("speaker") + 'Ouvir</button>' : '') +
       '<button class="btn" data-act="hint">' + ic("bulb") + 'Dica</button><button class="btn" data-act="maphint">' + ic("pin") + 'Mostrar no mapa</button></div>';
     if (S.hint >= 1) h += '<p class="note"><b>DICA</b>' + pl.dica + '</p>';
-    if (S.hint >= 2) h += '<p class="note"><b>MAPA</b>' + (fin ? 'O X mostra onde o tesouro está.' : 'Olhem o círculo que pisca no mapa.') + '</p>';
+    if (S.hint >= 2) h += '<p class="note"><b>MAPA</b>' + (fin ? (pl.px ? 'O X mostra onde o tesouro está.' : 'Sigam a pista!') : 'Olhem o círculo que pisca no mapa.') + '</p>';
+    if (fin) h += '<p class="note"><b>ATENÇÃO</b>Andando, sem correr! Esperem o adulto e fiquem longe da borda da água.</p>';
     var needCode = !fin && USAR_CODIGOS && pl.codigo, finCode = fin && USAR_CODIGOS && pl.codigo;
     if (K.mode === "code" && (needCode || finCode)) {
       h += '<div class="card dark"><p class="eyebrow">Achamos o lugar!</p><p style="margin:0 0 10px">Procurem o papel com o <b>número escondido</b> e digitem aqui.</p>' + kpHTML(4) + '<p class="msg' + (K.bad ? " bad" : "") + '" id="msg">' + K.msg + '</p></div>';
@@ -531,28 +562,23 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
   function renderMover() {
     var el = $("mover"), sc = el.querySelector(".zoomscroll"), sl = sc ? sc.scrollLeft : 0, st = sc ? sc.scrollTop : 0, mt = el.scrollTop;
     var h = '<div class="modal-in" style="max-width:none"><div class="top"><h2 style="font-size:26px">Pontos no mapa</h2><button class="btn gold" data-act="moverclose">Pronto</button></div>';
-    h += '<p class="lead" style="margin:0">' + (MV.key ? 'Toque no mapa onde fica de verdade: <b style="color:var(--gold)">' + PLACES[MV.key].nome + '</b>.' : 'Toque num nome para mover o ponto no mapa. Os números são os do guia do adulto.') + '</p><div class="row">';
-    Object.keys(PLACES).forEach(function (k, n) { h += '<button class="btn' + (MV.key === k ? " gold" : "") + '" data-act="mover" data-v="' + k + '">' + (n + 1) + ' · ' + PLACES[k].nome + (PONTOS[k] ? " ✓" : "") + '</button>'; });
+    h += '<p class="lead" style="margin:0">' + (MV.key ? 'Toque no mapa onde fica de verdade: <b style="color:var(--gold)">' + nomeDe(MV.key) + '</b>.' : 'Toque num nome para mover o ponto no mapa. Os números são os do guia do adulto.') + '</p><div class="row">';
+    chaves().forEach(function (k, n) { h += '<button class="btn' + (MV.key === k ? " gold" : "") + '" data-act="mover" data-v="' + k + '">' + (n + 1) + ' · ' + nomeDe(k) + (PONTOS[k] ? " ✓" : "") + '</button>'; });
     h += '</div><div class="zoomscroll">' + mapHTML(true, true) + '</div></div>';
     el.innerHTML = h; el.hidden = false;
     var sc2 = el.querySelector(".zoomscroll"); sc2.scrollLeft = sl; sc2.scrollTop = st; el.scrollTop = mt;
   }
   function zoomHTML() {
-    return '<div class="modal-in" style="max-width:none"><div class="top"><h2 style="font-size:28px">Mapa</h2><button class="btn gold" data-act="zoomclose">Fechar</button></div><div class="zoomscroll">' + mapHTML(true) + '</div></div>';
+    return '<div class="modal-in" style="max-width:none"><div class="top"><h2 style="font-size:28px">Mapa</h2><button class="btn gold" data-act="zoomclose">← Voltar</button></div><div class="zoomscroll">' + mapHTML(true) + '</div></div>';
   }
 
   /* ---------------- modo adulto ---------------- */
   function renderAdult() {
-    var h = '<div class="modal-in"><div class="top"><h2 style="font-size:28px">Modo adulto</h2><button class="btn gold" data-act="adultclose">Fechar</button></div>';
+    var h = '<div class="modal-in"><div class="top"><h2 style="font-size:28px">Modo adulto</h2><button class="btn gold" data-act="adultclose">← Voltar para o início</button></div>';
     if (!A.ok) {
       h += '<p class="lead">Digite o código dos adultos.</p>' + kpHTML(4) + '<p class="msg bad" id="msg">' + K.msg + '</p>';
     } else {
       h += '<div class="card dark"><p class="eyebrow">Cronograma</p><p class="lead" style="margin-bottom:12px">Criar, alterar ou excluir os horários da festa.</p><button class="btn gold" data-act="crono-edit">Editar cronograma</button></div>';
-      h += '<div class="card dark"><p class="eyebrow">Pontos no mapa</p><p class="lead" style="margin-bottom:12px">Os ícones das pistas estão em posições aproximadas. Escolha um ponto e toque no mapa onde ele realmente fica.</p><div class="row">' +
-        Object.keys(PLACES).map(function (k, n) { return '<button class="btn" data-act="mover" data-v="' + k + '">' + (n + 1) + ' · ' + PLACES[k].nome + (PONTOS[k] ? " ✓" : "") + '</button>'; }).join("") +
-        '</div><div class="row" style="margin-top:12px"><button class="btn" data-act="moverall">Ver mapa numerado</button><button class="btn' + (E.conf === "pontos" ? " warn" : "") + '" data-act="moverreset">' + (E.conf === "pontos" ? "Toque de novo para confirmar" : "Voltar às posições originais") + '</button></div></div>';
-      h += '<div class="card dark"><p class="eyebrow">Levar para os outros aparelhos</p><p class="lead" style="margin-bottom:12px">Gera um link com o cronograma e as posições dos pontos. Abra o link no outro tablet.</p><button class="btn" data-act="eshare">Gerar link</button>' +
-        (E.link ? '<textarea class="linkbox" rows="3" readonly data-act="selbox" style="margin-top:12px">' + esc(E.link) + '</textarea><p class="msg" style="margin-top:8px">' + esc(E.msg) + '</p>' : '') + '</div>';
       h += '<div class="card dark"><p class="eyebrow">Este tablet</p><div class="row">' +
         '<button class="btn' + (S.team === "grena" ? " gold" : "") + '" data-act="setteam" data-v="grena">' + GROUPS.grena.rot + '</button>' +
         '<button class="btn' + (S.team === "azul" ? " gold" : "") + '" data-act="setteam" data-v="azul">' + GROUPS.azul.rot + '</button></div>';
@@ -563,9 +589,10 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
       }
       h += '<div class="row" style="margin-top:12px"><button class="btn' + (S.reveal ? " gold" : "") + '" data-act="reveal">' + (S.reveal ? "Esconder lugares" : "Mostrar todos os lugares") + '</button>' +
         '<button class="btn" data-act="reset">' + (A.confirm ? "Toque de novo para confirmar" : "Reiniciar este tablet") + '</button></div></div>';
-      h += '<div class="card dark"><p class="eyebrow">O que esconder em cada lugar</p><p class="lead" style="margin-bottom:10px">Prenda cada papel na altura das crianças, na manhã da festa. Os números 1 a 5 são os do mapa numerado e do guia em PDF.</p><ul class="adult-list">';
+      h += '<div class="card dark"><p class="eyebrow">O que esconder em cada lugar</p><p class="lead" style="margin-bottom:10px">Prenda cada papel na altura das crianças, na manhã da festa. Os números 1 a 5 são os do guia em PDF.</p><ul class="adult-list">';
       Object.keys(PLACES).forEach(function (k, n) { h += '<li><b>' + (n + 1) + ' · ' + PLACES[k].nome + ' · papel ' + PLACES[k].codigo + '</b><br>' + PLACES[k].esconder + '</li>'; });
-      h += '<li><b>TESOURO</b><br>' + FINAL.esconder + '</li></ul>' +
+      finKeys().forEach(function (k, n) { var f = finByKey(k); h += '<li><b>' + (Object.keys(PLACES).length + n + 1) + ' · ' + f.nome + '</b><br>' + f.esconder + (f.px ? "" : "") + '</li>'; });
+      h += '</ul>' +
         '<p class="lead" style="margin-top:10px">Ordem do ' + GROUPS.grena.nome + ': ' + GROUPS.grena.ordem.map(function (k) { return PLACES[k].nome; }).join(" → ") + '.<br>Ordem do ' + GROUPS.azul.nome + ': ' + GROUPS.azul.ordem.map(function (k) { return PLACES[k].nome; }).join(" → ") + '.</p></div>';
     }
     $("adult").innerHTML = h + '</div>';
@@ -592,13 +619,16 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     }
     return out;
   }
-  function loadCrono() {
-    try { var j = JSON.parse(localStorage.getItem(CKEY)); var l = j && j.v === 1 ? cleanList(j.items) : null; if (l) return l; } catch (e) { }
-    return cleanList(CRONO_PADRAO);
-  }
-  function persistCrono() {
-    try { localStorage.setItem(CKEY, JSON.stringify({ v: 1, items: CRONO })); E.warn = ""; }
-    catch (e) { E.warn = "Este navegador não deixa salvar: as mudanças valem só enquanto a página estiver aberta."; }
+  /* O cronograma é o mesmo em todos os aparelhos: vem do arquivo cronograma.json (mesma pasta do site no GitHub).
+     Se o arquivo não existir ou falhar, vale o CRONO_PADRAO que está no código. Nada é salvo no aparelho. */
+  function loadCrono() { return cleanList(CRONO_PADRAO); }
+  function persistCrono() { E.dirty = true; }
+  function fetchCrono() {
+    if (!window.fetch || E.edit || E.dirty) return;
+    fetch("cronograma.json?t=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+      var l = j ? cleanList(Array.isArray(j) ? j : j.items) : null;
+      if (l && !E.edit && !E.dirty) { CRONO = l; if (!$("sec-crono").hidden) renderCrono(); else renderQuando(); }
+    }).catch(function () { });
   }
   function sorted() {
     return CRONO.map(function (it, i) { return { it: it, i: i }; })
@@ -624,15 +654,15 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     el.textContent = "Sábado, 17 de outubro" + (sa ? " · " + hfmt(sa) + (sb !== sa ? " às " + hfmt(sb) : "") : "");
   }
   function renderCrono() {
-    var list = sorted(), ag = ativos(list), h = "";
+    var list = sorted(), ag = ativos(list), h = '<div class="backrow"><button class="btn" data-act="tab" data-v="mapa">← Voltar para o início</button></div>';
     if (E.note) h += '<p class="note">' + esc(E.note) + '</p>';
     if (E.edit) {
-      h += '<div class="card dark"><p class="eyebrow">Modo edição</p><p class="lead" style="margin-bottom:12px">Use Editar e Excluir em cada horário. As mudanças ficam salvas neste aparelho; para levar aos outros, use o link.</p><div class="row">' +
+      h += '<div class="card dark"><p class="eyebrow">Modo edição</p><p class="lead" style="margin-bottom:12px">Use Editar e Excluir em cada horário. As mudanças aparecem aqui na hora. Para valerem nos dois tablets, toque em Gerar texto e cole no cronograma.json do GitHub.</p><div class="row">' +
         '<button class="btn gold" data-act="eadd">+ Adicionar horário</button>' +
-        '<button class="btn" data-act="eshare">Link para outros aparelhos</button>' +
+        '<button class="btn" data-act="eshare">Gerar texto para o GitHub</button>' +
         '<button class="btn' + (E.conf === "padrao" ? " warn" : "") + '" data-act="epadrao">' + (E.conf === "padrao" ? "Toque de novo para confirmar" : "Voltar ao padrão") + '</button>' +
         '<button class="btn" data-act="edone">Concluir</button></div>';
-      if (E.link) h += '<p class="lead" style="margin:12px 0 6px">Abra este link nos outros aparelhos para copiar o cronograma e os pontos do mapa:</p><textarea class="linkbox" id="linkbox" rows="3" readonly data-act="selbox">' + esc(E.link) + '</textarea>';
+      if (E.link) h += '<p class="lead" style="margin:12px 0 6px">Conteúdo do arquivo cronograma.json:</p><textarea class="linkbox" id="linkbox" rows="3" readonly data-act="selbox">' + esc(E.link) + '</textarea>';
       if (E.msg) h += '<p class="msg" style="margin-top:8px">' + esc(E.msg) + '</p>';
       if (E.warn) h += '<p class="msg bad" style="margin-top:8px">' + esc(E.warn) + '</p>';
       h += '</div>';
@@ -652,7 +682,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
   /* ---- editor (modo adulto) ---- */
   function editorHTML(f, edit) {
     var icons = ICONS.map(function (n) { return '<button type="button" class="icbtn" data-act="eicon" data-v="' + n + '" aria-label="' + ICON_PT[n] + '" aria-pressed="' + (n === f.i) + '">' + ic(n) + '</button>'; }).join("");
-    return '<div class="modal-in"><div class="top"><h2 style="font-size:28px">' + (edit ? "Alterar horário" : "Novo horário") + '</h2><button class="btn" data-act="ecancel">Cancelar</button></div>' +
+    return '<div class="modal-in"><div class="top"><h2 style="font-size:28px">' + (edit ? "Alterar horário" : "Novo horário") + '</h2><button class="btn" data-act="ecancel">← Voltar</button></div>' +
       '<div class="card dark" style="display:grid;gap:16px">' +
       '<div class="fld"><label for="f-t">Título</label><input id="f-t" type="text" maxlength="60" autocomplete="off" value="' + esc(f.t) + '"></div>' +
       '<div class="fld"><label for="f-d">Descrição (opcional)</label><textarea id="f-d" rows="2" maxlength="160">' + esc(f.d) + '</textarea></div>' +
@@ -681,33 +711,12 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     if (E.form.id) CRONO = CRONO.map(function (x) { return x.id === it.id ? it : x; }); else CRONO.push(it);
     persistCrono(); E.form = null; E.msg = "Salvo."; E.link = ""; $("editor").hidden = true; renderCrono();
   }
-  function b64url(str) {
-    var bytes = new TextEncoder().encode(str), s = "";
-    for (var k = 0; k < bytes.length; k++) s += String.fromCharCode(bytes[k]);
-    return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  function exportJson() {
+    E.link = JSON.stringify({ v: 1, items: sorted() }, null, 1);
+    E.msg = "Pronto. Copie o texto abaixo e cole no arquivo cronograma.json do GitHub (veja o passo a passo com o Claude).";
+    renderCrono();
+    try { navigator.clipboard.writeText(E.link).then(function () { E.msg = "Texto copiado! Cole no arquivo cronograma.json do GitHub e salve (Commit). Os dois tablets passam a mostrar o novo cronograma ao recarregar."; renderCrono(); }, function () { }); } catch (e) { }
   }
-  function shareLink() {
-    var url = location.href.split("#")[0] + "#c=" + b64url(JSON.stringify({ c: CRONO, p: PONTOS }));
-    function refresh() { renderCrono(); if (A.open && A.ok) renderAdult(); }
-    E.link = url; E.msg = "Copie o link abaixo e abra nos outros aparelhos."; refresh();
-    try { navigator.clipboard.writeText(url).then(function () { E.msg = "Link copiado! Cole numa mensagem e abra nos outros aparelhos."; refresh(); }, function () { }); } catch (e) { }
-  }
-  function importHash() {
-    var m = /^#c=([A-Za-z0-9_-]+)$/.exec(location.hash || ""); if (!m) return false;
-    try {
-      var b = m[1].replace(/-/g, "+").replace(/_/g, "/"); while (b.length % 4) b += "=";
-      var bin = atob(b), bytes = new Uint8Array(bin.length);
-      for (var k = 0; k < bin.length; k++) bytes[k] = bin.charCodeAt(k);
-      var j = JSON.parse(new TextDecoder().decode(bytes)), ok = false;
-      var c = Array.isArray(j) ? j : (j && typeof j === "object" ? j.c : null);   // links antigos eram só a lista
-      var l = c ? cleanList(c) : null;
-      if (l) { CRONO = l; persistCrono(); ok = true; }
-      if (j && !Array.isArray(j) && typeof j === "object" && j.p && typeof j.p === "object") { PONTOS = validPontos(j.p); savePontos(); applyPontos(); ok = true; }
-      if (!ok) return false;
-      E.note = "Cronograma e pontos do mapa atualizados a partir do link."; return true;
-    } catch (e) { return false; }
-  }
-
   /* ---------------- ações ---------------- */
   function confetti() {
     if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -772,7 +781,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
       case "gback": K.mode = null; K.pend = null; K.val = ""; K.msg = ""; K.bad = false; render(); break;
       case "crono-edit":
         A.open = false; A.ok = false; K.mode = null; K.val = ""; $("adult").hidden = true;
-        E.edit = true; E.msg = ""; E.link = ""; E.note = ""; setTab("crono"); render(); break;
+        E.edit = true; E.msg = ""; E.link = ""; E.note = ""; E.dirty = false; setTab("crono"); render(); break;
       case "eadd": openEditor(null); break;
       case "eedit": openEditor(v); break;
       case "eicon":
@@ -789,7 +798,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
         if (E.conf === "padrao") { CRONO = cleanList(CRONO_PADRAO); persistCrono(); E.conf = null; E.msg = "Cronograma padrão restaurado."; E.link = ""; }
         else E.conf = "padrao";
         renderCrono(); break;
-      case "eshare": shareLink(); break;
+      case "eshare": exportJson(); break;
       case "selbox": if (ev && ev.target && ev.target.select) ev.target.select(); break;
       case "mover": MV.open = true; MV.key = v; renderMover(); break;
       case "moverall": MV.open = true; MV.key = null; renderMover(); break;
@@ -804,7 +813,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
         if (E.conf === "pontos") { PONTOS = {}; applyPontos(); savePontos(); E.conf = null; E.link = ""; render(); }
         else { E.conf = "pontos"; renderAdult(); }
         break;
-      case "edone": E.edit = false; E.link = ""; E.msg = ""; E.warn = ""; E.conf = null; renderCrono(); break;
+      case "edone": E.edit = false; E.dirty = false; fetchCrono(); E.link = ""; E.msg = ""; E.warn = ""; E.conf = null; renderCrono(); break;
       case "speak": speak(); break;
       case "hint": S.hint = Math.max(S.hint, 1); save(); render(); break;
       case "maphint": S.hint = 2; save(); render(); break;
@@ -834,10 +843,10 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
   });
 
   render();
-  var veioDeLink = importHash();
   renderQuando();
-  setTab(veioDeLink || location.hash === "#cronograma" ? "crono" : "mapa");
-  setInterval(function () { if (!$("sec-crono").hidden && !E.edit) renderCrono(); }, 30000);
+  fetchCrono();
+  setTab(location.hash === "#cronograma" ? "crono" : "mapa");
+  setInterval(function () { fetchCrono(); if (!$("sec-crono").hidden && !E.edit) renderCrono(); }, 30000);
 })();
 </script>
 
