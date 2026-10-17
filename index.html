@@ -367,7 +367,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
   var S = load();
   var K = { mode: null, val: "", msg: "", bad: false, pend: null };
   var A = { open: false, ok: false, confirm: false };
-  var E = { dirty: false, edit: false, form: null, conf: null, msg: "", link: "", note: "" };   // edição do cronograma (só em memória)
+  var E = { dirty: false, fileSig: "", edit: false, form: null, conf: null, msg: "", link: "", note: "" };   // edição do cronograma (só em memória)
   var CKEY = "leo-cronograma-v1";
   var CRONO = loadCrono();
   var MV = { open: false, key: null };                 // tela de ajuste dos pontos no mapa
@@ -651,15 +651,37 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     }
     return out;
   }
-  /* O cronograma é o mesmo em todos os aparelhos: vem do arquivo cronograma.json (mesma pasta do site no GitHub).
-     Se o arquivo não existir ou falhar, vale o CRONO_PADRAO que está no código. Nada é salvo no aparelho. */
-  function loadCrono() { return cleanList(CRONO_PADRAO); }
-  function persistCrono() { E.dirty = true; }
+  /* O cronograma vem do arquivo cronograma.json (mesma pasta do site no GitHub), igual nos dois tablets.
+     Quando o adulto edita num tablet, a mudança vale NA HORA naquele tablet (guardada junto com a "assinatura" do arquivo
+     que estava no ar). Quando o cronograma.json do GitHub for atualizado, a edição local é descartada e vale o arquivo.
+     Sem arquivo, vale o CRONO_PADRAO do código. */
+  function readOverride() {
+    try { var j = JSON.parse(localStorage.getItem(CKEY)); var l = j && j.v === 2 ? cleanList(j.items) : null; if (l) return { items: l, base: typeof j.base === "string" ? j.base : "" }; } catch (e) { }
+    return null;
+  }
+  function loadCrono() { var o = readOverride(); return o ? o.items : cleanList(CRONO_PADRAO); }
+  function persistCrono() {
+    E.dirty = true;
+    try { localStorage.setItem(CKEY, JSON.stringify({ v: 2, items: CRONO, base: E.fileSig })); E.warn = ""; }
+    catch (e) { E.warn = "Este navegador não deixa salvar: a mudança vale só enquanto a página estiver aberta."; }
+  }
+  function clearOverride() { try { localStorage.removeItem(CKEY); } catch (e) { } }
   function fetchCrono() {
-    if (!window.fetch || E.edit || E.dirty) return;
-    fetch("cronograma.json?t=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
-      var l = j ? cleanList(Array.isArray(j) ? j : j.items) : null;
-      if (l && !E.edit && !E.dirty) { CRONO = l; if (!$("sec-crono").hidden) renderCrono(); else renderQuando(); if (!$("sec-home").hidden) renderHome(); }
+    if (!window.fetch) return;
+    fetch("cronograma.json?t=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.ok ? r.text() : null; }).then(function (txt) {
+      if (!txt) return;
+      var j = null; try { j = JSON.parse(txt); } catch (e) { return; }
+      var l = cleanList(Array.isArray(j) ? j : j && j.items); if (!l) return;
+      E.fileSig = txt.length + ":" + txt.replace(/\s+/g, "").slice(0, 4000);
+      var o = readOverride();
+      if (o && (o.base === "" || o.base === E.fileSig)) {
+        if (o.base === "") persistCrono();      // edição feita antes de o arquivo chegar: passa a valer em cima deste arquivo
+        return;                                 // mantém a edição local
+      }
+      if (o) clearOverride();                   // o arquivo do GitHub mudou: ele vale de novo
+      if (E.edit || E.form) return;
+      CRONO = l; E.dirty = false;
+      if (!$("sec-crono").hidden) renderCrono(); else renderQuando(); if (!$("sec-home").hidden) renderHome();
     }).catch(function () { });
   }
   function sorted() {
@@ -688,11 +710,12 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
   function renderCrono() {
     var list = sorted(), ag = ativos(list), h = '<div class="backrow"><button class="btn" data-act="tab" data-v="home">← Voltar para o início</button></div>';
     if (E.note) h += '<p class="note">' + esc(E.note) + '</p>';
+    if (!E.edit && readOverride()) h += '<p class="note"><b>ATENÇÃO</b>Este tablet está com um cronograma alterado. O outro só muda depois de atualizar o cronograma.json no GitHub.</p>';
     if (E.edit) {
-      h += '<div class="card dark"><p class="eyebrow">Modo edição</p><p class="lead" style="margin-bottom:12px">Use Editar e Excluir em cada horário. As mudanças aparecem aqui na hora. Para valerem nos dois tablets, toque em Gerar texto e cole no cronograma.json do GitHub.</p><div class="row">' +
+      h += '<div class="card dark"><p class="eyebrow">Modo edição</p><p class="lead" style="margin-bottom:12px">Use Editar e Excluir em cada horário. A mudança vale na hora neste tablet. Para valer nos dois, toque em Gerar texto e cole no cronograma.json do GitHub.</p><div class="row">' +
         '<button class="btn gold" data-act="eadd">+ Adicionar horário</button>' +
         '<button class="btn" data-act="eshare">Gerar texto para o GitHub</button>' +
-        '<button class="btn' + (E.conf === "padrao" ? " warn" : "") + '" data-act="epadrao">' + (E.conf === "padrao" ? "Toque de novo para confirmar" : "Voltar ao padrão") + '</button>' +
+        '<button class="btn' + (E.conf === "padrao" ? " warn" : "") + '" data-act="epadrao">' + (E.conf === "padrao" ? "Toque de novo para confirmar" : "Voltar ao original") + '</button>' +
         '<button class="btn" data-act="edone">Concluir</button></div>';
       if (E.link) h += '<p class="lead" style="margin:12px 0 6px">Conteúdo do arquivo cronograma.json:</p><textarea class="linkbox" id="linkbox" rows="3" readonly data-act="selbox">' + esc(E.link) + '</textarea>';
       if (E.msg) h += '<p class="msg" style="margin-top:8px">' + esc(E.msg) + '</p>';
@@ -779,12 +802,12 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     return Math.round((b - a) / 86400000);
   }
   function renderHome() {
-    var n = diasAte(), badge = n === 0 ? "É HOJE!" : n === 1 ? "É AMANHÃ!" : n > 1 ? "FALTAM " + n + " DIAS" : "OBRIGADO POR VIR!";
+    var n = diasAte(), badge = n === 0 ? "É HOJE!" : "";
     var list = sorted(), ag = ativos(list), h = "";
     var hs = 1e9, he = -1, sa = "", sb = "";
     CRONO.forEach(function (it) { var s0 = toMin(it.ini), e0 = it.fim ? toMin(it.fim) : s0; if (s0 < hs) { hs = s0; sa = it.ini; } if (e0 > he) { he = e0; sb = it.fim || it.ini; } });
     h += '<div class="hero"><p class="de">Festa de aniversário do</p><p class="dez" aria-label="Léo faz 10 anos">10</p><p class="anos">anos do Léo</p><div class="info">' +
-      '<span class="pill hot">' + badge + '</span><span class="pill">Sábado, 17 de outubro</span>' + (sa ? '<span class="pill">' + hfmt(sa) + (sb !== sa ? " às " + hfmt(sb) : "") + '</span>' : '') + '<span class="pill">Sítio do Bisa</span></div></div>';
+      (badge ? '<span class="pill hot">' + badge + '</span>' : '') + '<span class="pill">Sábado, 17 de outubro</span>' + (sa ? '<span class="pill">' + hfmt(sa) + (sb !== sa ? " às " + hfmt(sb) : "") + '</span>' : '') + '<span class="pill">Sítio do Bisa</span></div></div>';
     var cur = ag.main ? list.filter(function (x) { return x.id === ag.main; })[0] : null, nxt = null;
     if (!cur && n === 0) { var m = new Date().getHours() * 60 + new Date().getMinutes(); nxt = list.filter(function (x) { return toMin(x.ini) > m; })[0] || null; }
     if (cur) h += '<div class="agorabox">' + ic(cur.i) + '<div><small>Acontecendo agora</small><b>' + esc(cur.t) + '</b></div></div>';
@@ -834,7 +857,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
       case "gback": K.mode = null; K.pend = null; K.val = ""; K.msg = ""; K.bad = false; render(); break;
       case "crono-edit":
         A.open = false; A.ok = false; K.mode = null; K.val = ""; $("adult").hidden = true;
-        E.edit = true; E.msg = ""; E.link = ""; E.note = ""; E.dirty = false; setTab("crono"); render(); break;
+        E.edit = true; E.msg = ""; E.link = ""; E.note = ""; setTab("crono"); render(); break;
       case "eadd": openEditor(null); break;
       case "eedit": openEditor(v); break;
       case "eicon":
@@ -848,7 +871,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
         else E.conf = "del:" + v;
         renderCrono(); break;
       case "epadrao":
-        if (E.conf === "padrao") { CRONO = cleanList(CRONO_PADRAO); persistCrono(); E.conf = null; E.msg = "Cronograma padrão restaurado."; E.link = ""; }
+        if (E.conf === "padrao") { clearOverride(); CRONO = cleanList(CRONO_PADRAO); E.dirty = false; E.conf = null; E.msg = "Cronograma original restaurado."; E.link = ""; fetchCrono(); }
         else E.conf = "padrao";
         renderCrono(); break;
       case "eshare": exportJson(); break;
@@ -866,7 +889,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
         if (E.conf === "pontos") { PONTOS = {}; applyPontos(); savePontos(); E.conf = null; E.link = ""; render(); }
         else { E.conf = "pontos"; renderAdult(); }
         break;
-      case "edone": E.edit = false; E.dirty = false; fetchCrono(); E.link = ""; E.msg = ""; E.warn = ""; E.conf = null; renderCrono(); break;
+      case "edone": E.edit = false; E.link = ""; E.msg = ""; E.warn = ""; E.conf = null; renderCrono(); break;
       case "speak": speak(); break;
       case "hint": S.hint = Math.max(S.hint, 1); save(); render(); break;
       case "maphint": S.hint = 2; save(); render(); break;
