@@ -609,9 +609,10 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     if (!A.ok) {
       h += '<p class="lead">Digite o código dos adultos.</p>' + kpHTML(4) + '<p class="msg bad" id="msg">' + K.msg + '</p>';
     } else {
-      h += '<div class="card dark"><p class="eyebrow">Pontos no mapa</p><p class="lead" style="margin-bottom:12px">Se um ícone estiver fora do lugar, toque no nome e depois no mapa, onde ele fica de verdade. Vale só neste tablet: faça o mesmo no outro.</p><div class="row">' +
+      h += '<div class="card dark"><p class="eyebrow">Pontos no mapa</p><p class="lead" style="margin-bottom:12px">Se um ícone estiver fora do lugar, toque no nome e depois no mapa, onde ele fica de verdade. Os pontos são os mesmos nos dois tablets (vêm do código). Use isto só se algum estiver fora do lugar: corrija num tablet e me mande o texto que aparece embaixo, que eu acerto o site para os dois.</p><div class="row">' +
         chaves().map(function (k, n) { return '<button class="btn" data-act="mover" data-v="' + k + '">' + (n + 1) + ' · ' + nomeDe(k) + (PONTOS[k] ? " ✓" : "") + '</button>'; }).join("") +
-        '</div><div class="row" style="margin-top:12px"><button class="btn" data-act="moverall">Ver mapa numerado</button><button class="btn' + (E.conf === "pontos" ? " warn" : "") + '" data-act="moverreset">' + (E.conf === "pontos" ? "Toque de novo para confirmar" : "Voltar às posições originais") + '</button></div></div>';
+        '</div><div class="row" style="margin-top:12px"><button class="btn" data-act="moverall">Ver mapa numerado</button><button class="btn' + (E.conf === "pontos" ? " warn" : "") + '" data-act="moverreset">' + (E.conf === "pontos" ? "Toque de novo para confirmar" : "Voltar às posições originais") + '</button></div>' +
+        (Object.keys(PONTOS).length ? '<p class="lead" style="margin:12px 0 6px">Posições corrigidas (copie e mande para o Claude):</p><textarea class="linkbox" rows="3" readonly data-act="selbox">' + esc(Object.keys(PONTOS).map(function (k) { return k + "=" + PONTOS[k][0] + "," + PONTOS[k][1]; }).join("; ")) + '</textarea>' : '') + '</div>';
       h += '<div class="card dark"><p class="eyebrow">Este tablet</p><div class="row">' +
         '<button class="btn' + (S.team === "grena" ? " gold" : "") + '" data-act="setteam" data-v="grena">' + GROUPS.grena.rot + '</button>' +
         '<button class="btn' + (S.team === "azul" ? " gold" : "") + '" data-act="setteam" data-v="azul">' + GROUPS.azul.rot + '</button></div>';
@@ -686,7 +687,6 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
   function renderCrono() {
     var list = sorted(), ag = ativos(list), h = '<div class="backrow"><button class="btn" data-act="tab" data-v="home">← Voltar para o início</button></div>';
     if (E.note) h += '<p class="note">' + esc(E.note) + '</p>';
-    if (!E.edit && readOverride()) h += '<p class="note"><b>ATENÇÃO</b>Este tablet está com um cronograma alterado. O outro só muda depois de atualizar o cronograma.json no GitHub.</p>';
     if (E.edit) {
       h += '<div class="card dark"><p class="eyebrow">Modo edição</p><p class="lead" style="margin-bottom:12px">Use Editar e Excluir em cada horário. A mudança vale na hora neste tablet. Para valer nos dois, toque em Gerar texto e cole no cronograma.json do GitHub.</p><div class="row">' +
         '<button class="btn gold" data-act="eadd">+ Adicionar horário</button>' +
