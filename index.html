@@ -366,7 +366,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
   var S = load();
   var K = { mode: null, val: "", msg: "", bad: false, pend: null };
   var A = { open: false, ok: false, confirm: false };
-  var E = { dirty: false, fileSig: "", edit: false, form: null, conf: null, msg: "", link: "", note: "" };   // edição do cronograma (só em memória)
+  var E = { posmsg: "", dirty: false, fileSig: "", edit: false, form: null, conf: null, msg: "", link: "", note: "" };   // edição do cronograma (só em memória)
   var CKEY = "leo-cronograma-v1";
   var CRONO = loadCrono();
   var MV = { open: false, key: null };                 // tela de ajuste dos pontos no mapa
@@ -392,6 +392,19 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
   function applyPontos() {
     Object.keys(PLACES).forEach(function (k) { PLACES[k].px = (PONTOS[k] || ORIG[k]).slice(); });
     FINAIS.grena.px = (PONTOS.final_grena || ORIG.final_grena).slice(); FINAIS.azul.px = (PONTOS.final_azul || ORIG.final_azul).slice();
+  }
+  function posCode() {
+    return chaves().map(function (k) { var p = PONTOS[k] || ORIG[k]; return p ? k + "=" + p[0] + "," + p[1] : null; }).filter(Boolean).join("; ");
+  }
+  function aplicarPos(txt) {
+    var o = {}, ok = 0;
+    String(txt || "").split(/[;\n]+/).forEach(function (par) {
+      var m = /^\s*([a-z_]+)\s*=\s*(\d{1,4})\s*,\s*(\d{1,4})\s*$/.exec(par); if (m) { o[m[1]] = [+m[2], +m[3]]; }
+    });
+    o = validPontos(o); ok = Object.keys(o).length;
+    if (!ok) return 0;
+    Object.keys(o).forEach(function (k) { PONTOS[k] = o[k]; });
+    applyPontos(); savePontos(); return ok;
   }
   function chaves() { return Object.keys(PLACES).concat(finKeys()); }
   function nomeDe(k) { return finByKey(k) ? finByKey(k).nome : PLACES[k].nome; }
@@ -592,7 +605,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
   }
   function renderMover() {
     var el = $("mover"), sc = el.querySelector(".zoomscroll"), sl = sc ? sc.scrollLeft : 0, st = sc ? sc.scrollTop : 0, mt = el.scrollTop;
-    var h = '<div class="modal-in" style="max-width:none"><div class="top"><h2 style="font-size:26px">Pontos no mapa</h2><button class="btn gold" data-act="moverclose">Pronto</button></div>';
+    var h = '<div class="modal-in" style="max-width:none"><div class="top"><h2 style="font-size:26px">Pontos no mapa</h2><button class="btn gold" data-act="moverclose">← Voltar para o modo adulto</button></div>';
     h += '<p class="lead" style="margin:0">' + (MV.key ? 'Toque no mapa onde fica de verdade: <b style="color:var(--gold)">' + nomeDe(MV.key) + '</b>.' : 'Toque num nome para mover o ponto no mapa. Os números são os do guia do adulto.') + '</p><div class="row">';
     chaves().forEach(function (k, n) { h += '<button class="btn' + (MV.key === k ? " gold" : "") + '" data-act="mover" data-v="' + k + '">' + (n + 1) + ' · ' + nomeDe(k) + (PONTOS[k] ? " ✓" : "") + '</button>'; });
     h += '</div><div class="zoomscroll">' + mapHTML(true, true) + '</div></div>';
@@ -612,7 +625,12 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
       h += '<div class="card dark"><p class="eyebrow">Pontos no mapa</p><p class="lead" style="margin-bottom:12px">Se um ícone estiver fora do lugar, toque no nome e depois no mapa, onde ele fica de verdade. Os pontos são os mesmos nos dois tablets (vêm do código). Use isto só se algum estiver fora do lugar: corrija num tablet e me mande o texto que aparece embaixo, que eu acerto o site para os dois.</p><div class="row">' +
         chaves().map(function (k, n) { return '<button class="btn" data-act="mover" data-v="' + k + '">' + (n + 1) + ' · ' + nomeDe(k) + (PONTOS[k] ? " ✓" : "") + '</button>'; }).join("") +
         '</div><div class="row" style="margin-top:12px"><button class="btn" data-act="moverall">Ver mapa numerado</button><button class="btn' + (E.conf === "pontos" ? " warn" : "") + '" data-act="moverreset">' + (E.conf === "pontos" ? "Toque de novo para confirmar" : "Voltar às posições originais") + '</button></div>' +
-        (Object.keys(PONTOS).length ? '<p class="lead" style="margin:12px 0 6px">Posições corrigidas (copie e mande para o Claude):</p><textarea class="linkbox" rows="3" readonly data-act="selbox">' + esc(Object.keys(PONTOS).map(function (k) { return k + "=" + PONTOS[k][0] + "," + PONTOS[k][1]; }).join("; ")) + '</textarea>' : '') + '</div>';
+        '<p class="lead" style="margin:14px 0 6px">Levar as posições para o outro tablet: copie este código, mande para o outro tablet (WhatsApp, por exemplo) e cole lá, em “Colar posições”.</p>' +
+        '<textarea class="linkbox" rows="3" readonly data-act="selbox">' + esc(posCode()) + '</textarea>' +
+        '<p class="lead" style="margin:14px 0 6px">Colar posições (código vindo do outro tablet):</p>' +
+        '<textarea class="linkbox" id="poscole" rows="3" placeholder="arvore=780,355; traves=640,290; ..."></textarea>' +
+        '<div class="row" style="margin-top:10px"><button class="btn gold" data-act="posaplicar">Aplicar posições</button></div>' +
+        '<p class="msg" id="posmsg" style="margin-top:8px">' + esc(E.posmsg || "") + '</p></div>';
       h += '<div class="card dark"><p class="eyebrow">Este tablet</p><div class="row">' +
         '<button class="btn' + (S.team === "grena" ? " gold" : "") + '" data-act="setteam" data-v="grena">' + GROUPS.grena.rot + '</button>' +
         '<button class="btn' + (S.team === "azul" ? " gold" : "") + '" data-act="setteam" data-v="azul">' + GROUPS.azul.rot + '</button></div>';
@@ -629,6 +647,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
       h += '</ul>' +
         '<p class="lead" style="margin-top:10px">Ordem do ' + GROUPS.grena.nome + ': ' + GROUPS.grena.ordem.map(function (k) { return PLACES[k].nome; }).join(" → ") + '.<br>Ordem do ' + GROUPS.azul.nome + ': ' + GROUPS.azul.ordem.map(function (k) { return PLACES[k].nome; }).join(" → ") + '.</p></div>';
     }
+    if (A.ok) h += '<button class="btn gold big" data-act="adultclose">← Voltar para o início</button>';
     $("adult").innerHTML = h + '</div>';
   }
 
@@ -853,6 +872,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
       case "eshare": exportJson(); break;
       case "selbox": if (ev && ev.target && ev.target.select) ev.target.select(); break;
       case "mover": MV.open = true; MV.key = v; renderMover(); break;
+      case "posaplicar": var n0 = aplicarPos($("poscole") ? $("poscole").value : ""); E.posmsg = n0 ? "Pronto! " + n0 + " posições aplicadas neste tablet." : "Não entendi o código. Cole o texto inteiro, do jeito que veio."; render(); break;
       case "moverall": MV.open = true; MV.key = null; renderMover(); break;
       case "moverclose": MV.open = false; MV.key = null; $("mover").hidden = true; render(); break;
       case "mappick":
