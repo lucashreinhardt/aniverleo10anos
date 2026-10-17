@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Caça ao tesouro e cronograma da festa de 10 anos do Léo.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%231B2641'/%3E%3Cpath d='M32 10l6.5 14 15 1.6-11.2 10 3.2 15L32 42.6 18.5 50.6l3.2-15L10.5 25.6l15-1.6z' fill='%23FBC707'/%3E%3C/svg%3E">
-<title>Caça ao Tesouro do Léo</title>
+<title>Aniver Léo 10 Anos</title>
 <style>:root{color-scheme:dark;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}html{background:#1B2641}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
@@ -143,7 +143,29 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
 /* ---------- janelas ---------- */
 .modal{position:fixed;inset:0;z-index:40;background:#0E1630;overflow:auto;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
 .backrow{margin-bottom:14px}
-  .backrow{margin-bottom:14px}
+.topback{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.home{display:grid;gap:18px;max-width:900px;margin:0 auto}
+.hero{position:relative;overflow:hidden;text-align:center;padding:26px 20px 24px;border-radius:24px;border:4px solid var(--gold);background:linear-gradient(180deg,var(--navy-3),var(--navy-2))}
+.hero:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(29,78,156,.38) 0 36px,rgba(162,13,59,.38) 36px 72px);opacity:.55;pointer-events:none}
+.hero>*{position:relative}
+.hero .de{margin:0;font:700 clamp(14px,2.4vw,20px)/1.2 var(--f-body);letter-spacing:.28em;text-transform:uppercase}
+.hero .dez{margin:0;font:400 clamp(150px,34vw,300px)/.82 var(--f-display);color:var(--gold);text-shadow:6px 6px 0 var(--garnet),10px 10px 0 var(--navy);letter-spacing:-.02em}
+.hero .anos{margin:6px 0 0;font:400 clamp(34px,8vw,68px)/1 var(--f-display);color:var(--white);text-transform:uppercase;letter-spacing:.12em;text-shadow:3px 3px 0 var(--garnet)}
+.hero .info{margin:18px 0 0;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;background:var(--navy);border:2px solid var(--gold);font:700 clamp(14px,2vw,17px)/1.2 var(--f-body)}
+.pill.hot{background:var(--garnet);border-color:var(--white)}
+.agorabox{display:flex;gap:14px;align-items:center;padding:16px 20px;border-radius:18px;background:var(--gold);color:var(--navy);border:3px solid var(--white)}
+.agorabox .ic{width:38px;height:38px;color:var(--garnet)}
+.agorabox small{display:block;font:700 12px/1 var(--f-body);letter-spacing:.18em;text-transform:uppercase;color:var(--garnet);margin-bottom:4px}
+.agorabox b{font:400 clamp(20px,3vw,28px)/1.1 var(--f-display);text-transform:uppercase}
+.access{display:grid;gap:14px;grid-template-columns:1fr 1fr}
+.acc{appearance:none;cursor:pointer;text-align:left;border-radius:22px;border:4px solid var(--gold);padding:20px;min-height:170px;display:grid;align-content:space-between;gap:12px;color:var(--white);background:var(--navy-2)}
+.acc.g{background:var(--garnet)} .acc.b{background:var(--blue)}
+.acc .ic{width:46px;height:46px;color:var(--gold)}
+.acc b{display:block;font:400 clamp(24px,3.6vw,34px)/1.05 var(--f-display);text-transform:uppercase}
+.acc span{font:400 16px/1.3 var(--f-body)}
+.acc:active{transform:translateY(1px)}
+.homefoot{text-align:center;color:var(--muted);margin:0;font-size:16px}
   .modal-in{max-width:760px;margin:0 auto;display:grid;gap:14px}
 .modal .top{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .zoomscroll{overflow:auto;border-radius:12px;border:3px solid var(--gold)}
@@ -158,6 +180,10 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
 
 @media (max-width:900px){
   .layout{grid-template-columns:minmax(0,1fr);grid-template-rows:auto;grid-template-areas:"map" "panel" "rules"}
+}
+@media (max-width:600px){
+  .access{grid-template-columns:1fr}
+  .acc{min-height:130px}
 }
 @media (max-width:420px){
   .two{grid-template-columns:1fr}
@@ -196,16 +222,22 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
 
 <div class="stripes"></div>
 <header class="wrap">
-  <p class="kicker">Aniversário do Léo · 10 anos · Sítio do Bisa</p>
-  <h1>Caça ao Tesouro</h1>
+  <p class="kicker">Festa de aniversário · Sítio do Bisa</p>
+  <h1>Aniver Léo 10 anos</h1>
   <nav class="tabs" role="tablist" aria-label="Seções">
-    <button class="tab" role="tab" id="tab-mapa" data-act="tab" data-v="mapa" aria-selected="true" aria-controls="sec-mapa"><svg class="ic" aria-hidden="true"><use href="#i-map"/></svg>Mapa do Tesouro</button>
+    <button class="tab" role="tab" id="tab-home" data-act="tab" data-v="home" aria-selected="true" aria-controls="sec-home"><svg class="ic" aria-hidden="true"><use href="#i-flag"/></svg>Início</button>
     <button class="tab" role="tab" id="tab-crono" data-act="tab" data-v="crono" aria-selected="false" aria-controls="sec-crono"><svg class="ic" aria-hidden="true"><use href="#i-cake"/></svg>Cronograma</button>
+    <button class="tab" role="tab" id="tab-mapa" data-act="tab" data-v="mapa" aria-selected="false" aria-controls="sec-mapa"><svg class="ic" aria-hidden="true"><use href="#i-map"/></svg>Mapa do Tesouro</button>
   </nav>
 </header>
 
 <main class="wrap">
-  <section id="sec-mapa" role="tabpanel" aria-labelledby="tab-mapa">
+  <section id="sec-home" role="tabpanel" aria-labelledby="tab-home">
+    <div class="home" id="home"></div>
+  </section>
+
+  <section id="sec-mapa" role="tabpanel" aria-labelledby="tab-mapa" hidden>
+    <div class="backrow topback"><button class="btn" data-act="tab" data-v="home">← Voltar para o início</button><h2>Caça ao tesouro</h2></div>
     <div class="layout">
       <div class="mapwrap" id="mapslot"></div>
       <div class="panel" id="panel" aria-live="polite"></div>
@@ -627,7 +659,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     if (!window.fetch || E.edit || E.dirty) return;
     fetch("cronograma.json?t=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
       var l = j ? cleanList(Array.isArray(j) ? j : j.items) : null;
-      if (l && !E.edit && !E.dirty) { CRONO = l; if (!$("sec-crono").hidden) renderCrono(); else renderQuando(); }
+      if (l && !E.edit && !E.dirty) { CRONO = l; if (!$("sec-crono").hidden) renderCrono(); else renderQuando(); if (!$("sec-home").hidden) renderHome(); }
     }).catch(function () { });
   }
   function sorted() {
@@ -654,7 +686,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     el.textContent = "Sábado, 17 de outubro" + (sa ? " · " + hfmt(sa) + (sb !== sa ? " às " + hfmt(sb) : "") : "");
   }
   function renderCrono() {
-    var list = sorted(), ag = ativos(list), h = '<div class="backrow"><button class="btn" data-act="tab" data-v="mapa">← Voltar para o início</button></div>';
+    var list = sorted(), ag = ativos(list), h = '<div class="backrow"><button class="btn" data-act="tab" data-v="home">← Voltar para o início</button></div>';
     if (E.note) h += '<p class="note">' + esc(E.note) + '</p>';
     if (E.edit) {
       h += '<div class="card dark"><p class="eyebrow">Modo edição</p><p class="lead" style="margin-bottom:12px">Use Editar e Excluir em cada horário. As mudanças aparecem aqui na hora. Para valerem nos dois tablets, toque em Gerar texto e cole no cronograma.json do GitHub.</p><div class="row">' +
@@ -735,11 +767,32 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     setTimeout(function () { box.remove(); }, 4200);
   }
   function setTab(v) {
-    var m = v !== "crono";
-    $("sec-mapa").hidden = !m; $("sec-crono").hidden = m;
-    $("tab-mapa").setAttribute("aria-selected", m); $("tab-crono").setAttribute("aria-selected", !m);
-    try { history.replaceState(null, "", m ? "#mapa" : "#cronograma"); } catch (e) { }
-    if (!m) renderCrono();
+    if (v !== "crono" && v !== "mapa") v = "home";
+    ["home", "crono", "mapa"].forEach(function (k) { $("sec-" + k).hidden = k !== v; $("tab-" + k).setAttribute("aria-selected", String(k === v)); });
+    try { history.replaceState(null, "", "#" + v); } catch (e) { }
+    if (v === "crono") renderCrono();
+    if (v === "home") renderHome();
+    try { window.scrollTo(0, 0); } catch (e) { }
+  }
+  function diasAte() {
+    var d = new Date(), p = DATA_FESTA.split("-"), a = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()), b = Date.UTC(+p[0], +p[1] - 1, +p[2]);
+    return Math.round((b - a) / 86400000);
+  }
+  function renderHome() {
+    var n = diasAte(), badge = n === 0 ? "É HOJE!" : n === 1 ? "É AMANHÃ!" : n > 1 ? "FALTAM " + n + " DIAS" : "OBRIGADO POR VIR!";
+    var list = sorted(), ag = ativos(list), h = "";
+    var hs = 1e9, he = -1, sa = "", sb = "";
+    CRONO.forEach(function (it) { var s0 = toMin(it.ini), e0 = it.fim ? toMin(it.fim) : s0; if (s0 < hs) { hs = s0; sa = it.ini; } if (e0 > he) { he = e0; sb = it.fim || it.ini; } });
+    h += '<div class="hero"><p class="de">Festa de aniversário do</p><p class="dez" aria-label="Léo faz 10 anos">10</p><p class="anos">anos do Léo</p><div class="info">' +
+      '<span class="pill hot">' + badge + '</span><span class="pill">Sábado, 17 de outubro</span>' + (sa ? '<span class="pill">' + hfmt(sa) + (sb !== sa ? " às " + hfmt(sb) : "") + '</span>' : '') + '<span class="pill">Sítio do Bisa</span></div></div>';
+    var cur = ag.main ? list.filter(function (x) { return x.id === ag.main; })[0] : null, nxt = null;
+    if (!cur && n === 0) { var m = new Date().getHours() * 60 + new Date().getMinutes(); nxt = list.filter(function (x) { return toMin(x.ini) > m; })[0] || null; }
+    if (cur) h += '<div class="agorabox">' + ic(cur.i) + '<div><small>Acontecendo agora</small><b>' + esc(cur.t) + '</b></div></div>';
+    else if (nxt) h += '<div class="agorabox">' + ic(nxt.i) + '<div><small>A seguir · ' + nxt.ini + '</small><b>' + esc(nxt.t) + '</b></div></div>';
+    h += '<div class="access"><button class="acc g" data-act="tab" data-v="crono">' + ic("cake") + '<div><b>Cronograma</b><span>Todos os horários da festa</span></div></button>' +
+      '<button class="acc b" data-act="tab" data-v="mapa">' + ic("map") + '<div><b>Mapa do tesouro</b><span>Caça ao tesouro: um tablet para cada grupo</span></div></button></div>';
+    h += '<p class="homefoot">Visca o Léo! Bom aniversário e boa festa!</p>';
+    $("home").innerHTML = h;
   }
   function speak() {
     try {
@@ -845,8 +898,8 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
   render();
   renderQuando();
   fetchCrono();
-  setTab(location.hash === "#cronograma" ? "crono" : "mapa");
-  setInterval(function () { fetchCrono(); if (!$("sec-crono").hidden && !E.edit) renderCrono(); }, 30000);
+  setTab(location.hash === "#cronograma" || location.hash === "#crono" ? "crono" : location.hash === "#mapa" ? "mapa" : "home");
+  setInterval(function () { fetchCrono(); if (!$("sec-crono").hidden && !E.edit) renderCrono(); if (!$("sec-home").hidden) renderHome(); }, 30000);
 })();
 </script>
 
