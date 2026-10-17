@@ -350,13 +350,12 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
      ini/fim = "HH:MM" (fim pode ficar vazio); par = acontece junto com outra atividade;
      destaque = borda grená; mapa = mostra o botão que abre o mapa do tesouro. */
   var CRONO_PADRAO = [
-    { id: "c1", ini: "14:00", fim: "14:45", t: "Brincadeiras diversas", d: "Pula-pula, fla-flu, esconde-esconde e futebol.", i: "ball" },
+    { id: "c1", ini: "14:00", fim: "", t: "Início da Festa", d: "Terá muitas brincadeiras para criançada e adultos: futebol, esconde esconde, pula pula, piscina de bolinhas, pesca esportiva, caça ao tesouro...", i: "ball" },
     { id: "c2", ini: "14:45", fim: "15:15", t: "Buffet de salgados", d: "", i: "cup" },
     { id: "c3", ini: "15:15", fim: "15:30", t: "Parabéns", d: "Bolo e docinhos.", i: "cake" },
     { id: "c4", ini: "15:30", fim: "17:30", t: "Buffet de sorvete liberado", d: "Liberado até as 17:30.", i: "icecream", par: true },
     { id: "c5", ini: "16:00", fim: "16:30", t: "Caça ao tesouro", d: "Dois grupos, CR7 e Neymar, com um tablet cada. Sigam as pistas do mapa!", i: "map", destaque: true, mapa: true },
-    { id: "c6", ini: "16:30", fim: "18:00", t: "Brincadeiras", d: "", i: "star" },
-    { id: "c7", ini: "18:00", fim: "", t: "Fim da festa", d: "Obrigado por vir!", i: "flag" }
+    { id: "c7", ini: "18:00", fim: "", t: "Fim da festa", d: "Agradeço pela presença!", i: "flag" }
   ];
   var ICONS = ["ball", "star", "cup", "icecream", "cake", "gift", "flag", "map", "fish", "bulb", "speaker", "tree", "goal", "grapes", "tub", "pin"];
   var HORA = /^([01]\d|2[0-3]):[0-5]\d$/;
@@ -388,8 +387,8 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     });
     return out;
   }
-  function loadPontos() { return {}; }   // as posições vêm só do código, iguais em todos os aparelhos
-  function savePontos() { }
+  function loadPontos() { try { var j = JSON.parse(localStorage.getItem(PKEY)); if (j && j.v === 1) return validPontos(j.px); } catch (e) { } return {}; }
+  function savePontos() { try { localStorage.setItem(PKEY, JSON.stringify({ v: 1, px: PONTOS })); } catch (e) { } }
   function applyPontos() {
     Object.keys(PLACES).forEach(function (k) { PLACES[k].px = (PONTOS[k] || ORIG[k]).slice(); });
     FINAIS.grena.px = (PONTOS.final_grena || ORIG.final_grena).slice(); FINAIS.azul.px = (PONTOS.final_azul || ORIG.final_azul).slice();
@@ -485,7 +484,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
       }
       if (mv) {
         s += '<g transform="translate(' + (x + 38) + ' ' + (y - 38) + ')"><circle r="21" fill="' + GARNET + '" stroke="#fff" stroke-width="4"/><text y="9" text-anchor="middle" font-size="26" fill="#fff" style="font-family:var(--f-body);font-weight:700">' + (Object.keys(PLACES).indexOf(k) + 1) + '</text></g>';
-        if (MV.key === k) s += '<circle class="ring" cx="' + x + '" cy="' + y + '" r="74" fill="none" stroke="' + GOLD + '" stroke-width="10"/><circle class="ring" cx="' + x + '" cy="' + y + '" r="74" fill="none" stroke="' + NAVY + '" stroke-width="3"/>';
+        if (MV.key === k) s += '<circle class="ring" cx="' + x + '" cy="' + y + '" r="105" fill="none" stroke="' + GOLD + '" stroke-width="10"/><circle class="ring" cx="' + x + '" cy="' + y + '" r="105" fill="none" stroke="' + NAVY + '" stroke-width="3"/>';
       }
     });
     // tesouro na tela de ajuste dos pontos
@@ -494,7 +493,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
         var f = finByKey(k); if (!f.px) return;
         s += xMark(f.px);
         s += '<g transform="translate(' + (f.px[0] + 46) + ' ' + (f.px[1] - 52) + ')"><circle r="21" fill="' + (k === "final_grena" ? GARNET : "#1F5FB4") + '" stroke="#fff" stroke-width="4"/><text y="9" text-anchor="middle" font-size="26" fill="#fff" style="font-family:var(--f-body);font-weight:700">' + (Object.keys(PLACES).length + n + 1) + '</text></g>';
-        if (MV.key === k) s += '<circle class="ring" cx="' + f.px[0] + '" cy="' + f.px[1] + '" r="74" fill="none" stroke="' + GOLD + '" stroke-width="10"/>';
+        if (MV.key === k) s += '<circle class="ring" cx="' + f.px[0] + '" cy="' + f.px[1] + '" r="105" fill="none" stroke="' + GOLD + '" stroke-width="10"/>';
       });
     }
     // alvo (dica no mapa)
@@ -503,7 +502,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
       if (isFinalStep()) {
         if (t.px) s += xMark(t.px);
       } else {
-        s += '<circle class="ring" cx="' + t.px[0] + '" cy="' + t.px[1] + '" r="74" fill="none" stroke="' + GOLD + '" stroke-width="10"/><circle class="ring" cx="' + t.px[0] + '" cy="' + t.px[1] + '" r="74" fill="none" stroke="' + NAVY + '" stroke-width="3"/>';
+        s += '<circle class="ring" cx="' + t.px[0] + '" cy="' + t.px[1] + '" r="105" fill="none" stroke="' + GOLD + '" stroke-width="10"/><circle class="ring" cx="' + t.px[0] + '" cy="' + t.px[1] + '" r="105" fill="none" stroke="' + NAVY + '" stroke-width="3"/>';
       }
     }
     if (!mv && isVictory() && fin().px) s += xMark(fin().px);
@@ -553,7 +552,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     h += '<div class="acts">' + (window.speechSynthesis ? '<button class="btn" data-act="speak">' + ic("speaker") + 'Ouvir</button>' : '') +
       '<button class="btn" data-act="hint">' + ic("bulb") + 'Dica</button><button class="btn" data-act="maphint">' + ic("pin") + 'Mostrar no mapa</button></div>';
     if (S.hint >= 1) h += '<p class="note"><b>DICA</b>' + pl.dica + '</p>';
-    if (S.hint >= 2) h += '<p class="note"><b>MAPA</b>' + (fin ? (pl.px ? 'O X mostra onde o tesouro está.' : 'Sigam a pista!') : 'Olhem o círculo que pisca no mapa.') + '</p>';
+    if (S.hint >= 2) h += '<p class="note"><b>MAPA</b>' + (fin ? (pl.px ? 'O X mostra onde o tesouro está.' : 'Sigam a pista!') : 'O círculo que pisca mostra a região aproximada. Procurem por perto!') + '</p>';
     if (fin) h += '<p class="note"><b>ATENÇÃO</b>Andando, sem correr! Esperem o adulto e fiquem longe da borda da água.</p>';
     var needCode = !fin && USAR_CODIGOS && pl.codigo, finCode = fin && USAR_CODIGOS && pl.codigo;
     if (K.mode === "code" && (needCode || finCode)) {
@@ -610,7 +609,9 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     if (!A.ok) {
       h += '<p class="lead">Digite o código dos adultos.</p>' + kpHTML(4) + '<p class="msg bad" id="msg">' + K.msg + '</p>';
     } else {
-      h += '<div class="card dark"><p class="eyebrow">Cronograma</p><p class="lead" style="margin-bottom:12px">Criar, alterar ou excluir os horários da festa.</p><button class="btn gold" data-act="crono-edit">Editar cronograma</button></div>';
+      h += '<div class="card dark"><p class="eyebrow">Pontos no mapa</p><p class="lead" style="margin-bottom:12px">Se um ícone estiver fora do lugar, toque no nome e depois no mapa, onde ele fica de verdade. Vale só neste tablet: faça o mesmo no outro.</p><div class="row">' +
+        chaves().map(function (k, n) { return '<button class="btn" data-act="mover" data-v="' + k + '">' + (n + 1) + ' · ' + nomeDe(k) + (PONTOS[k] ? " ✓" : "") + '</button>'; }).join("") +
+        '</div><div class="row" style="margin-top:12px"><button class="btn" data-act="moverall">Ver mapa numerado</button><button class="btn' + (E.conf === "pontos" ? " warn" : "") + '" data-act="moverreset">' + (E.conf === "pontos" ? "Toque de novo para confirmar" : "Voltar às posições originais") + '</button></div></div>';
       h += '<div class="card dark"><p class="eyebrow">Este tablet</p><div class="row">' +
         '<button class="btn' + (S.team === "grena" ? " gold" : "") + '" data-act="setteam" data-v="grena">' + GROUPS.grena.rot + '</button>' +
         '<button class="btn' + (S.team === "azul" ? " gold" : "") + '" data-act="setteam" data-v="azul">' + GROUPS.azul.rot + '</button></div>';
@@ -651,39 +652,13 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     }
     return out;
   }
-  /* O cronograma vem do arquivo cronograma.json (mesma pasta do site no GitHub), igual nos dois tablets.
-     Quando o adulto edita num tablet, a mudança vale NA HORA naquele tablet (guardada junto com a "assinatura" do arquivo
-     que estava no ar). Quando o cronograma.json do GitHub for atualizado, a edição local é descartada e vale o arquivo.
-     Sem arquivo, vale o CRONO_PADRAO do código. */
-  function readOverride() {
-    try { var j = JSON.parse(localStorage.getItem(CKEY)); var l = j && j.v === 2 ? cleanList(j.items) : null; if (l) return { items: l, base: typeof j.base === "string" ? j.base : "" }; } catch (e) { }
-    return null;
-  }
-  function loadCrono() { var o = readOverride(); return o ? o.items : cleanList(CRONO_PADRAO); }
-  function persistCrono() {
-    E.dirty = true;
-    try { localStorage.setItem(CKEY, JSON.stringify({ v: 2, items: CRONO, base: E.fileSig })); E.warn = ""; }
-    catch (e) { E.warn = "Este navegador não deixa salvar: a mudança vale só enquanto a página estiver aberta."; }
-  }
-  function clearOverride() { try { localStorage.removeItem(CKEY); } catch (e) { } }
-  function fetchCrono() {
-    if (!window.fetch) return;
-    fetch("cronograma.json?t=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.ok ? r.text() : null; }).then(function (txt) {
-      if (!txt) return;
-      var j = null; try { j = JSON.parse(txt); } catch (e) { return; }
-      var l = cleanList(Array.isArray(j) ? j : j && j.items); if (!l) return;
-      E.fileSig = txt.length + ":" + txt.replace(/\s+/g, "").slice(0, 4000);
-      var o = readOverride();
-      if (o && (o.base === "" || o.base === E.fileSig)) {
-        if (o.base === "") persistCrono();      // edição feita antes de o arquivo chegar: passa a valer em cima deste arquivo
-        return;                                 // mantém a edição local
-      }
-      if (o) clearOverride();                   // o arquivo do GitHub mudou: ele vale de novo
-      if (E.edit || E.form) return;
-      CRONO = l; E.dirty = false;
-      if (!$("sec-crono").hidden) renderCrono(); else renderQuando(); if (!$("sec-home").hidden) renderHome();
-    }).catch(function () { });
-  }
+  /* CRONOGRAMA OFICIAL: fixo no código (CRONO_PADRAO), igual em qualquer aparelho. Para mudar, edite a lista lá em cima
+     e suba o site de novo. Edições antigas guardadas no aparelho são apagadas ao abrir. */
+  function readOverride() { return null; }
+  function loadCrono() { try { localStorage.removeItem(CKEY); } catch (e) { } return cleanList(CRONO_PADRAO); }
+  function persistCrono() { }
+  function clearOverride() { }
+  function fetchCrono() { }
   function sorted() {
     return CRONO.map(function (it, i) { return { it: it, i: i }; })
       .sort(function (a, b) { return toMin(a.it.ini) - toMin(b.it.ini) || a.i - b.i; })
@@ -696,6 +671,7 @@ h2{margin:0;font:400 clamp(24px,3vw,34px)/1.05 var(--f-display);text-transform:u
     var m = d.getHours() * 60 + d.getMinutes();
     items.forEach(function (it) {
       var a = toMin(it.ini), b = it.fim ? toMin(it.fim) : a + 30;
+      if (!it.fim) { var nx = items.filter(function (o) { return toMin(o.ini) > a; })[0]; if (nx && toMin(nx.ini) - a <= 180) b = toMin(nx.ini); }
       if (m >= a && m < b) { on[it.id] = true; if (!it.par) main = it.id; }
     });
     if (!main) items.forEach(function (it) { if (on[it.id]) main = it.id; });
